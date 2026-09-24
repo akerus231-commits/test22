@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ДентКальк — калькулятор себестоимости стоматологических услуг</title>
+  <meta name="description" content="Онлайн-калькулятор себестоимости и маржи стоматологической услуги: прямые и накладные расходы, расчёт на врача, маржа.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%230e9f8e' d='M20 6c-9 0-14 7-14 16 0 8 4 13 6 22 2 9 4 14 8 14s5-7 6-12c1-4 3-6 6-6s5 2 6 6c1 5 2 12 6 12s6-5 8-14c2-9 6-14 6-22 0-9-5-16-14-16-6 0-9 3-12 3S26 6 20 6z'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#top" class="logo" aria-label="ДентКальк — на главную">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 6c-9 0-14 7-14 16 0 8 4 13 6 22 2 9 4 14 8 14s5-7 6-12c1-4 3-6 6-6s5 2 6 6c1 5 2 12 6 12s6-5 8-14c2-9 6-14 6-22 0-9-5-16-14-16-6 0-9 3-12 3S26 6 20 6z"/></svg>
+        <span>Дент<b>Кальк</b></span>
+      </a>
+      <nav class="nav" aria-label="Основная навигация">
+        <a href="#calculator">Калькулятор</a>
+        <a href="#how">Как считается</a>
+        <a href="#benefits">Зачем это клинике</a>
+        <a href="#faq">Вопросы</a>
+      </nav>
+      <a href="#calculator" class="btn btn-primary btn-sm">Рассчитать</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-text">
+          <span class="eyebrow">Для стоматологических клиник</span>
+          <h1>Узнайте реальную себестоимость и маржу каждой услуги</h1>
+          <p class="lead">Введите цену по прайсу, прямые и накладные расходы — калькулятор мгновенно покажет себестоимость услуги, прибыль и маржу. Расчёт идёт онлайн, прямо в браузере.</p>
+          <div class="hero-actions">
+            <a href="#calculator" class="btn btn-primary">Открыть калькулятор</a>
+            <a href="#how" class="btn btn-ghost">Как это работает</a>
+          </div>
+        </div>
+        <div class="hero-card" aria-hidden="true">
+          <div class="hero-card-row"><span>Цена по прайсу</span><b>25 000 тг</b></div>
+          <div class="hero-card-row"><span>Прямые расходы</span><b>12 500 тг</b></div>
+          <div class="hero-card-row"><span>Накладные на врача</span><b>11 667 тг</b></div>
+          <div class="hero-card-row total"><span>Себестоимость</span><b>24 167 тг</b></div>
+          <div class="hero-card-margin">
+            <span>Маржа</span>
+            <strong>3,3%</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="calculator" class="section calc-section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Калькулятор себестоимости услуги</h2>
+          <p>Жёлтые поля — для ввода данных, итоги пересчитываются автоматически. Все суммы в тенге. Данные сохраняются в вашем браузере.</p>
+        </div>
+
+        <div class="calc">
+          <form class="calc-form" id="calc-form" autocomplete="off" novalidate>
+            <fieldset class="card">
+              <legend class="card-title"><span class="step">1</span>Услуга и цена</legend>
+              <div class="field">
+                <label for="serviceName">Наименование услуги</label>
+                <input type="text" id="serviceName" name="serviceName" class="input input-text" placeholder="Например, лечение кариеса">
+              </div>
+              <div class="field">
+                <label for="price">Цена по прайсу</label>
+                <div class="input-wrap">
+                  <input type="text" inputmode="decimal" id="price" name="price" class="input input-num">
+                  <span class="unit">тг</span>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="card">
+              <legend class="card-title"><span class="step">2</span>Прямые расходы</legend>
+              <div class="fields" id="direct-fields"></div>
+              <div class="subtotal">
+                <span>Итого прямые расходы</span>
+                <b id="out-direct">0 тг</b>
+              </div>
+            </fieldset>
+
+            <fieldset class="card">
+              <legend class="card-title"><span class="step">3</span>Накладные расходы</legend>
+              <div class="fields" id="overhead-fields"></div>
+              <div class="subtotal">
+                <span>Итого накладные расходы</span>
+                <b id="out-overhead">0 тг</b>
+              </div>
+              <div class="field field-inline">
+                <label for="doctors">Количество врачей</label>
+                <div class="input-wrap">
+                  <input type="text" inputmode="numeric" id="doctors" name="doctors" class="input input-num">
+                  <span class="unit">чел.</span>
+                </div>
+              </div>
+              <div class="subtotal">
+                <span>Накладные расходы на 1 врача</span>
+                <b id="out-per-doctor">0 тг</b>
+              </div>
+            </fieldset>
+          </form>
+
+          <aside class="calc-result" aria-live="polite">
+            <div class="result card">
+              <p class="result-service" id="out-service">услуга</p>
+              <div class="result-main">
+                <span>Себестоимость услуги</span>
+                <strong id="out-cost">0 тг</strong>
+              </div>
+
+              <div class="bar" role="img" id="bar" aria-label="Структура цены">
+                <div class="bar-seg seg-direct" id="bar-direct"></div>
+                <div class="bar-seg seg-overhead" id="bar-overhead"></div>
+                <div class="bar-seg seg-profit" id="bar-profit"></div>
+              </div>
+              <ul class="legend">
+                <li><i class="dot seg-direct"></i>Прямые <b id="lg-direct">0 тг</b></li>
+                <li><i class="dot seg-overhead"></i>Накладные на врача <b id="lg-overhead">0 тг</b></li>
+                <li><i class="dot seg-profit"></i>Прибыль <b id="lg-profit">0 тг</b></li>
+              </ul>
+
+              <dl class="result-list">
+                <div><dt>Цена по прайсу</dt><dd id="out-price">0 тг</dd></div>
+                <div><dt>Прибыль с услуги</dt><dd id="out-profit">0 тг</dd></div>
+              </dl>
+
+              <div class="margin" id="margin-box">
+                <span>Маржа</span>
+                <strong id="out-margin">0%</strong>
+                <p id="margin-hint"></p>
+              </div>
+
+              <div class="result-actions">
+                <button type="button" class="btn btn-ghost btn-sm" id="btn-reset">Пример из таблицы</button>
+                <button type="button" class="btn btn-ghost btn-sm" id="btn-clear">Очистить</button>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-print">Печать / PDF</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" class="section section-alt">
+      <div class="container">
+        <div class="section-head">
+          <h2>Как считается</h2>
+          <p>Калькулятор повторяет формулы сводной формы «Себестоимость медицинской услуги».</p>
+        </div>
+        <ol class="steps">
+          <li>
+            <h3>Прямые расходы</h3>
+            <p>Сумма затрат, которые напрямую относятся к услуге: оплата врача и медсестры, налоги по ФОТ, инструменты, лекарства, материалы, амортизация.</p>
+            <code>Σ прямых расходов</code>
+          </li>
+          <li>
+            <h3>Накладные на 1 врача</h3>
+            <p>Общие расходы клиники — аренда, коммунальные, администрация, реклама, CRM и др. — делятся на количество врачей.</p>
+            <code>Σ накладных ÷ кол-во врачей</code>
+          </li>
+          <li>
+            <h3>Себестоимость</h3>
+            <p>Итоговые затраты клиники на оказание одной услуги.</p>
+            <code>Прямые + накладные на врача</code>
+          </li>
+          <li>
+            <h3>Маржа</h3>
+            <p>Доля прибыли в цене услуги. Если маржа отрицательная — услуга продаётся в убыток.</p>
+            <code>(Цена − себестоимость) ÷ цена</code>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="benefits" class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Зачем это клинике</h2>
+        </div>
+        <div class="benefits">
+          <article class="benefit">
+            <div class="benefit-icon" aria-hidden="true">₸</div>
+            <h3>Обоснованный прайс</h3>
+            <p>Цена строится от реальных затрат, а не «как у конкурентов».</p>
+          </article>
+          <article class="benefit">
+            <div class="benefit-icon" aria-hidden="true">%</div>
+            <h3>Контроль маржи</h3>
+            <p>Сразу видно, какие услуги приносят прибыль, а какие — убыток.</p>
+          </article>
+          <article class="benefit">
+            <div class="benefit-icon" aria-hidden="true">⚡</div>
+            <h3>Мгновенно и онлайн</h3>
+            <p>Никаких Excel-файлов: меняете цифру — итог пересчитывается сразу.</p>
+          </article>
+          <article class="benefit">
+            <div class="benefit-icon" aria-hidden="true">🔒</div>
+            <h3>Конфиденциально</h3>
+            <p>Данные никуда не отправляются и хранятся только в вашем браузере.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section section-alt">
+      <div class="container narrow">
+        <div class="section-head">
+          <h2>Частые вопросы</h2>
+        </div>
+        <details class="faq">
+          <summary>Что делать, если маржа отрицательная?</summary>
+          <p>Себестоимость услуги выше цены. Пересмотрите цену по прайсу, стоимость материалов или распределение накладных расходов.</p>
+        </details>
+        <details class="faq">
+          <summary>Почему накладные делятся на количество врачей?</summary>
+          <p>Так общие расходы клиники распределяются между врачами, которые оказывают услуги. Чем больше врачей, тем меньше накладных приходится на каждого.</p>
+        </details>
+        <details class="faq">
+          <summary>Сохраняются ли мои данные?</summary>
+          <p>Введённые значения сохраняются только в вашем браузере, чтобы не потерять их при перезагрузке страницы. На сервер ничего не отправляется.</p>
+        </details>
+        <details class="faq">
+          <summary>Можно ли сохранить расчёт?</summary>
+          <p>Нажмите «Печать / PDF» — браузер предложит распечатать расчёт или сохранить его в PDF.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© <span id="year"></span> ДентКальк — калькулятор себестоимости для стоматологий</span>
+      <a href="#top">Наверх ↑</a>
+    </div>
+  </footer>
+
+  <script src="js/calculator.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
