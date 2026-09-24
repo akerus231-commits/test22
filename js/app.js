@@ -2,6 +2,7 @@
   'use strict';
 
   var Calc = window.DentalCalc;
+  var Recs = window.DentalRecs;
   var STORAGE_KEY = 'dental-calc:v1';
 
   var fmtMoney = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
@@ -136,11 +137,153 @@
     }
 
     save(state);
+    if (!aiActive) renderRecs(Recs.analyze(state));
+  }
+
+  // ---------- Рекомендации ----------
+
+  var LEVEL_LABELS = { high: 'Срочно', medium: 'Важно', low: 'Совет', good: 'Хорошо' };
+  var recsList = $('recs-list');
+  var recsStatus = $('recs-status');
+  var aiBtn = $('btn-ai');
+  var aiStopBtn = $('btn-ai-stop');
+  var sample = null;
+  var aiActive = false;   // на экране ответ ИИ, а не быстрый анализ
+  var aiCtl = null;
+
+  function recItem(rec) {
+    var li = document.createElement('li');
+    li.className = 'rec';
+    var chip = document.createElement('span');
+    chip.className = 'chip chip-' + rec.level;
+    chip.textContent = LEVEL_LABELS[rec.level];
+    var h = document.createElement('h4');
+    h.textContent = rec.title;
+    var p = document.createElement('p');
+    p.textContent = rec.text;
+    li.append(chip, h, p);
+    return li;
+  }
+
+  function renderRecs(recs) {
+    recsList.replaceChildren.apply(recsList, recs.map(recItem));
+  }
+
+  function setStatus(text, busy) {
+    recsStatus.hidden = !text;
+    recsStatus.textContent = text || '';
+    recsStatus.classList.toggle('is-busy', !!busy);
+  }
+
+  function setMode(ai) {
+    aiActive = ai;
+    $('recs-badge').textContent = ai ? 'ИИ · Claude' : 'Быстрый анализ';
+    $('recs-badge').classList.toggle('is-ai', ai);
+    $('recs-sub').textContent = ai
+      ? 'Персональные рекомендации по текущему расчёту.'
+      : 'Подсказки по вашим цифрам обновляются вместе с расчётом.';
+    $('recs-note').hidden = !ai;
+  }
+
+  function backToQuick(message) {
+    setMode(false);
+    setStatus(message || '');
+    renderRecs(Recs.analyze(readState()));
+  }
+
+  var AI_ERRORS = {
+    rate_limited: 'Слишком много запросов. Попробуйте чуть позже.',
+    session_expired: 'Войдите в Claude заново и повторите запрос.',
+    refused: 'ИИ не смог ответить на этот запрос. Проверьте введённые данные.',
+    empty_completion: 'ИИ вернул пустой ответ. Попробуйте ещё раз.',
+    prompt_too_large: 'Слишком много данных для запроса.'
+  };
+  var AI_UNAVAILABLE = ['not_granted', 'sampling_disabled', 'not_declared', 'capability_disabled', 'capability_removed'];
+
+  function askAI() {
+    if (!sample) return;
+    var ctl = new AbortController();
+    aiCtl = ctl;
+    var items = [];
+    var pending = '';
+
+    function take(line) {
+      var rec = Recs.parseLine(line);
+      if (rec) {
+        items.push(rec);
+        recsList.appendChild(recItem(rec));
+        setStatus('Claude пишет рекомендации…', true);
+      }
+    }
+
+    setMode(true);
+    recsList.replaceChildren();
+    setStatus('Claude анализирует расчёт. Обычно это занимает до минуты…', true);
+    aiBtn.disabled = true;
+    aiStopBtn.hidden = false;
+
+    sample(Recs.buildPrompt(readState()), {
+      signal: ctl.signal,
+      onText: function (update) {
+        var lines = (pending + update.delta).split('\n');
+        pending = lines.pop();
+        lines.forEach(take);
+      }
+    }).then(function (res) {
+      if (aiCtl !== ctl) return;
+      take(pending);
+      if (!items.length) {
+        renderRecs([{ level: 'low', title: 'Ответ ИИ', text: res.text }]);
+      }
+      setStatus(res.truncated ? 'Ответ получился слишком длинным и обрезан.' : '');
+    }).catch(function (e) {
+      if (aiCtl !== ctl) return; // запрос отменён вводом новых данных
+      var code = e && e.code;
+      if (AI_UNAVAILABLE.indexOf(code) !== -1) {
+        aiBtn.hidden = true;
+        backToQuick('ИИ-рекомендации недоступны. Показан быстрый анализ.');
+      } else if (code === 'cancelled') {
+        if (items.length) setStatus('Остановлено.'); else backToQuick();
+      } else if (items.length) {
+        setStatus(AI_ERRORS[code] || 'Ответ прервался. Нажмите кнопку, чтобы попробовать ещё раз.');
+      } else {
+        backToQuick(AI_ERRORS[code] || 'Не удалось получить ответ. Попробуйте ещё раз.');
+      }
+    }).then(function () {
+      if (aiCtl === ctl) finishAI();
+    });
+  }
+
+  function finishAI() {
+    aiCtl = null;
+    aiBtn.disabled = false;
+    aiStopBtn.hidden = true;
+  }
+
+  aiBtn.addEventListener('click', askAI);
+  aiStopBtn.addEventListener('click', function () { if (aiCtl) aiCtl.abort(); });
+
+  // ИИ доступен, когда страница открыта в Claude; иначе остаётся быстрый анализ.
+  if (window.claude && typeof window.claude.use === 'function') {
+    window.claude.use('sample').then(function (fn) {
+      sample = fn;
+      aiBtn.hidden = !fn;
+    }, function () {});
   }
 
   // ---------- События ----------
 
-  form.addEventListener('input', render);
+  // Новые данные — ответ ИИ устарел, возвращаемся к быстрому анализу.
+  form.addEventListener('input', function () {
+    if (aiCtl) {
+      var ctl = aiCtl;
+      finishAI();
+      ctl.abort();
+    }
+    if (aiActive) setMode(false);
+    setStatus('');
+    render();
+  });
 
   // Форматирование числа при выходе из поля: 25000 → 25 000
   form.addEventListener('focusout', function (e) {
@@ -154,12 +297,12 @@
 
   $('btn-reset').addEventListener('click', function () {
     writeState(Calc.DEFAULTS);
-    render();
+    form.dispatchEvent(new Event('input'));
   });
 
   $('btn-clear').addEventListener('click', function () {
     writeState(emptyState());
-    render();
+    form.dispatchEvent(new Event('input'));
     $('price').focus();
   });
 
