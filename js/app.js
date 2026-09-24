@@ -163,7 +163,8 @@
     $('price').focus();
   });
 
-  $('btn-print').addEventListener('click', function () { window.print(); });
+  var printBtn = $('btn-print');
+  if (printBtn) printBtn.addEventListener('click', function () { window.print(); });
 
   $('year').textContent = new Date().getFullYear();
 
