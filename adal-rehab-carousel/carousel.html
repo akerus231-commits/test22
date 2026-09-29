@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=1160">
+<meta name="viewport" content="width=2400">
 <title>Adal Rehab&nbsp;— карусель</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,12 +29,47 @@
   html, body { background: #9A9EA4; }
   body {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 80px;
     padding: 40px;
     font-family: var(--sans);
     -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Форматы ----------
+     square 1080×1080 — лента: кнопка рекламы под картинкой, поля 96px.
+     story  1080×1920 — Stories/Reels: сверху 250px занимают имя профиля
+     и прогресс-бар, снизу 384px — кнопка рекламы. Весь контент между ними. */
+  .deck {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    --h: 1350px;
+    --safe-top: var(--pad);
+    --safe-bottom: var(--pad);
+    --content-top: 232px;
+    --cover-top: 232px;
+    --final-top: 232px;
+  }
+  .deck[data-format="square"] {
+    --h: 1080px;
+    --content-top: 216px;
+    --cover-top: 150px;
+    --final-top: 176px;
+  }
+  .deck[data-format="story"] {
+    --h: 1920px;
+    --safe-top: 250px;
+    --safe-bottom: 384px;
+    --content-top: 520px;
+    --cover-top: 400px;
+    --final-top: 420px;
+  }
+  .deck__label {
+    font-size: 28px;
+    color: #FFFFFF;
+    letter-spacing: 1px;
   }
 
   /* ---------- Артборд ---------- */
@@ -42,7 +77,7 @@
     position: relative;
     flex: none;
     width: 1080px;
-    height: 1350px;
+    height: var(--h);
     overflow: hidden;
     background: var(--bg);
     color: var(--ink);
@@ -55,7 +90,7 @@
   /* ---------- Служебные элементы ---------- */
   .pager {
     position: absolute;
-    top: var(--pad);
+    top: var(--safe-top);
     right: var(--pad);
     font-size: 28px;
     line-height: 1;
@@ -67,7 +102,7 @@
   .badge {
     position: absolute;
     left: 50%;
-    bottom: var(--pad);
+    bottom: var(--safe-bottom);
     transform: translateX(-50%);
     padding: 14px 28px;
     border: 2px solid var(--line);
@@ -88,7 +123,7 @@
     position: absolute;
     left: var(--pad);
     right: var(--pad);
-    bottom: 222px;
+    bottom: calc(var(--safe-bottom) + 126px);
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
@@ -118,15 +153,16 @@
     position: absolute;
     left: var(--pad);
     right: var(--pad);
-    top: 232px;
+    top: var(--content-top);
   }
+  .cover .content { top: var(--cover-top); }
+  .final .content { top: var(--final-top); }
 
   .h-cover {
     font-family: var(--serif);
     font-weight: 600;
     font-size: 88px;
     line-height: 1.1;
-    text-wrap: balance;
   }
   .h-slide {
     font-family: var(--serif);
@@ -183,6 +219,37 @@
       rgba(12, 25, 39, 0.80) 100%);
   }
 
+  /* Кадрирование и затемнение по форматам */
+  .deck[data-format="square"] .final .scene__shade {
+    background: linear-gradient(180deg,
+      rgba(12, 25, 39, 0.86) 0%,
+      rgba(12, 25, 39, 0.70) 45%,
+      rgba(12, 25, 39, 0.52) 68%,
+      rgba(12, 25, 39, 0.82) 100%);
+  }
+  .deck[data-format="story"] .scene__photo {
+    object-position: 72% 100%;
+    transform: none;
+  }
+  .deck[data-format="story"] .scene__shade {
+    background: linear-gradient(180deg,
+      rgba(12, 25, 39, 0.80) 0%,
+      rgba(12, 25, 39, 0.76) 42%,
+      rgba(12, 25, 39, 0.24) 56%,
+      rgba(12, 25, 39, 0.20) 66%,
+      rgba(12, 25, 39, 0.74) 80%,
+      rgba(12, 25, 39, 0.86) 100%);
+  }
+  .deck[data-format="story"] .final .scene__shade {
+    background: linear-gradient(180deg,
+      rgba(12, 25, 39, 0.82) 0%,
+      rgba(12, 25, 39, 0.76) 50%,
+      rgba(12, 25, 39, 0.30) 60%,
+      rgba(12, 25, 39, 0.26) 66%,
+      rgba(12, 25, 39, 0.76) 78%,
+      rgba(12, 25, 39, 0.88) 100%);
+  }
+
   /* Обложка */
   .overline {
     font-size: 32px;
@@ -223,9 +290,14 @@
     line-height: 1.2;
     color: #FFFFFF;
   }
+  .deck[data-format="square"] .final .body { margin-top: 40px; }
+  .deck[data-format="square"] .final .cta { margin-top: 48px; }
 </style>
 </head>
 <body>
+
+<main class="deck" data-format="square">
+<p class="deck__label">1080 × 1080 · лента</p>
 
 <!-- 01 · Обложка -->
 <section class="slide slide--dark cover" id="slide-01">
@@ -319,6 +391,19 @@
   <div class="badge">Анонимно · Не ставим на учёт · Круглосуточно</div>
 </section>
 
+</main>
+
+<script>
+  // Второй формат: те же слайды, другая сетка (см. .deck[data-format] в стилях).
+  (function () {
+    const square = document.querySelector('.deck[data-format="square"]');
+    const story = square.cloneNode(true);
+    story.dataset.format = 'story';
+    story.querySelector('.deck__label').textContent = '1080 × 1920 · Stories / Reels';
+    story.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
+    square.after(story);
+  })();
+</script>
 
 </body>
 </html>
