@@ -1,9 +1,11 @@
-// Экспорт карусели в PNG, два формата по 7 слайдов (2× плотность):
+// Экспорт карусели в PNG, два формата по 7 слайдов, ровно в размер площадки:
 //   png/1080x1080/slide-01.png … slide-07.png  — лента
 //   png/1080x1920/slide-01.png … slide-07.png  — Stories / Reels
 //
 //   npm install
-//   npm run export            # или: node export.js [папка-вывода]
+//   npm run export            # или: node export.js [папка-вывода] [--scale=2]
+//
+// --scale=2 даёт удвоенные файлы (2160×2160, 2160×3840) для печати/архива.
 //
 // Шрифты грузятся с Google Fonts, поэтому нужен интернет.
 // Фото обложки и финала берутся из bg/cover.jpg и bg/final.jpg.
@@ -13,14 +15,17 @@ const fs = require('fs');
 const { chromium } = require('playwright');
 
 const SRC = path.join(__dirname, 'carousel.html');
-const OUT = path.resolve(process.argv[2] || path.join(__dirname, 'png'));
+const args = process.argv.slice(2);
+const scaleArg = args.find((a) => a.startsWith('--scale='));
+const SCALE = scaleArg ? Number(scaleArg.split('=')[1]) : 1;
+const OUT = path.resolve(args.find((a) => !a.startsWith('--')) || path.join(__dirname, 'png'));
 const FORMATS = { square: '1080x1080', story: '1080x1920' };
 
 (async () => {
   const browser = await chromium.launch();
   const page = await browser.newPage({
     viewport: { width: 2400, height: 2000 },
-    deviceScaleFactor: 2,
+    deviceScaleFactor: SCALE,
   });
 
   await page.goto('file://' + SRC, { waitUntil: 'networkidle' });
