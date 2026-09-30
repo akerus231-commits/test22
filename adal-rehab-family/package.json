@@ -1,0 +1,10 @@
+{
+  "name": "adal-rehab-family",
+  "private": true,
+  "scripts": {
+    "export": "node export.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.1"
+  }
+}

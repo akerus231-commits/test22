@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1160">
+<title>Adal Rehab — одиночные макеты</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=Source+Serif+4:wght@400;600&display=block" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAFAF7;
+    --bg-dark: #14283D;
+    --ink: #14283D;
+    --ink-on-dark: #F3F5F7;
+    --muted: #5A6472;
+    --muted-on-dark: #8DA0B2;
+    --accent: #2E7D6B;
+    --accent-on-dark: #7FC4B2;
+    --line: #DDE2E8;
+    --line-on-dark: rgba(255, 255, 255, 0.15);
+
+    --pad: 96px;
+    --serif: "Source Serif 4", Georgia, serif;
+    --sans: "IBM Plex Sans", Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { background: #9A9EA4; }
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 40px;
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Артборд ---------- */
+  .ad {
+    position: relative;
+    flex: none;
+    width: 1080px;
+    height: 1350px;
+    overflow: hidden;
+    background: var(--bg);
+
+    --c-text: var(--ink);
+    --c-muted: var(--muted);
+    --c-bar: var(--accent);
+    --c-rule: var(--line);
+  }
+  .ad--dark {
+    background: var(--bg-dark);
+    --c-text: var(--ink-on-dark);
+    --c-muted: var(--muted-on-dark);
+    --c-bar: var(--accent-on-dark);
+    --c-rule: var(--line-on-dark);
+  }
+
+  .top {
+    position: absolute;
+    top: var(--pad);
+    left: var(--pad);
+    right: var(--pad);
+  }
+
+  /* Блок 1 — боль */
+  .pain {
+    display: flex;
+    gap: 40px;
+  }
+  .pain::before {
+    content: "";
+    flex: none;
+    width: 4px;
+    background: var(--c-bar);
+  }
+  .pain__text {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 76px;
+    line-height: 1.15;
+    color: var(--c-text);
+    text-wrap: balance;
+  }
+
+  .rule {
+    width: 120px;
+    height: 2px;
+    margin: 56px 0 40px;
+    background: var(--c-rule);
+  }
+
+  /* Блок 2 — решение: основной цвет, не сноска */
+  .solution {
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: 44px;
+    line-height: 1.4;
+    color: var(--c-text);
+    text-wrap: pretty;
+  }
+
+  /* Блок 3 — действие */
+  .bottom {
+    position: absolute;
+    left: var(--pad);
+    right: var(--pad);
+    bottom: var(--pad);
+  }
+  /* Если кнопка не помещается рядом с логотипом, логотип уходит строкой выше —
+     остаётся справа внизу. */
+  .bottom__row {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px 32px;
+  }
+  .cta {
+    padding: 26px 52px;
+    border-radius: 12px;
+    background: var(--accent);
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 38px;
+    line-height: 1.2;
+    color: #FFFFFF;
+    white-space: nowrap;
+  }
+  .logo {
+    margin-left: auto;
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 1.2;
+    letter-spacing: 3px;
+    color: var(--c-text);
+    white-space: nowrap;
+  }
+  .barrier {
+    margin-top: 28px;
+    font-size: 28px;
+    line-height: 1.3;
+    letter-spacing: 1px;
+    color: var(--c-muted);
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+
+<script>
+  /* Одиночные макеты. Порядок = порядок в ленте: каждый третий (3, 6, 9, 12) тёмный.
+     name — имя PNG; lang — 'ru' или 'kk' (от него зависит строка снятия барьера).
+     Тексты согласованы и проверены на политику Meta — не менять и не сокращать. */
+  const ADS = [
+    { name: 'a-01', lang: 'ru',
+      pain: 'Сколько раз вы уже слышали «это был последний раз»?',
+      solution: 'Расскажите, что происходит. Специалист объяснит, что делать дальше и чего делать точно нельзя.',
+      cta: 'Разобрать мою ситуацию' },
+    { name: 'a-02', lang: 'ru',
+      pain: 'Он пьёт только по выходным — а выходных вы ждёте с тревогой?',
+      solution: 'Один разговор со специалистом — и вы поймёте, ваш это случай или нет.',
+      cta: 'Поговорить со специалистом' },
+    { name: 'a-03-kz', lang: 'kk',
+      pain: 'Ол тағы да ішті. Ал сіз тағы да үндемедіңіз бе?',
+      solution: 'Не істеу керегін маман айтады. Тегін, аноним түрде.',
+      cta: 'Маманмен сөйлесу' },
+    { name: 'a-04-kz', lang: 'kk',
+      pain: 'Бүкіл отбасын жалғыз өзіңіз ұстап тұрсыз ба?',
+      solution: 'Жағдайыңызды бірге талдаймыз — оның қатысуынсыз.',
+      cta: 'Кеңес алу' },
+    { name: 'n-01', lang: 'ru',
+      pain: 'Из дома опять пропали деньги — и вы уже знаете, кто взял?',
+      solution: 'Скажем, как говорить с ним и что сделать с деньгами, чтобы не стало хуже.',
+      cta: 'Разобрать мою ситуацию' },
+    { name: 'n-02', lang: 'ru',
+      pain: '«Мне не нужна помощь» — и разговор закончен?',
+      solution: 'Начать можно без него. Первый шаг почти всегда делает семья.',
+      cta: 'Начать без него' },
+    { name: 'n-03', lang: 'ru',
+      pain: 'Уговоры, угрозы, просьбы — вы пробовали всё и ничего не сработало?',
+      solution: 'Покажем, что работает вместо уговоров, на вашей конкретной ситуации.',
+      cta: 'Узнать, что делать' },
+    { name: 'n-04-kz', lang: 'kk',
+      pain: 'Үйден ақша жоғалды. Кім алғанын білесіз бе?',
+      solution: 'Онымен қалай сөйлесу керегін айтамыз. Аноним түрде.',
+      cta: 'Кеңес алу' },
+    { name: 'l-01', lang: 'ru',
+      pain: '«Отыграюсь и остановлюсь» — сколько месяцев вы это слышите?',
+      solution: 'Разберём, что делать с долгами и с ним. Бесплатно.',
+      cta: 'Разобрать мою ситуацию' },
+    { name: 'l-02', lang: 'ru',
+      pain: 'Вы гасите его кредиты и ждёте, что он остановится?',
+      solution: 'Объясним, почему он не останавливается сам и что в этой ситуации можете сделать вы.',
+      cta: 'Узнать, что делать' },
+    { name: 'l-03-kz', lang: 'kk',
+      pain: 'Тағы бір қарыз. Тағы бір «соңғы рет». Таныс па?',
+      solution: 'Не істеу керегін маман түсіндіреді. Тегін.',
+      cta: 'Маманнан кеңес алу' },
+    { name: 'k-01', lang: 'ru',
+      pain: 'Ищете ответ ночью, когда все уже спят?',
+      solution: 'Пять вопросов — и специалист напишет, что делать именно в вашей ситуации.',
+      cta: 'Пройти за 2 минуты' },
+    { name: 'k-02', lang: 'ru',
+      pain: 'Это уже зависимость или он правда может бросить сам?',
+      solution: 'Пять коротких вопросов покажут, на какой стадии ситуация.',
+      cta: 'Проверить за 2 минуты' },
+  ];
+
+  const BARRIER = {
+    ru: 'Бесплатно · Анонимно · Без его ведома',
+    kk: 'Тегін · Аноним түрде · Оның хабарынсыз',
+  };
+
+  // Типографика без правки текста: неразрывный пробел перед тире и после
+  // коротких слов, чтобы они не висели в конце строки.
+  const NB = ' ';
+  const SHORT = /(^|[\s«(])([А-Яа-яЁёӘәҒғҚқҢңӨөҰұҮүҺһІі]{1,2})\s/g;
+  function typo(t) {
+    return t.replace(/ —/g, NB + '—').replace(SHORT, '$1$2' + NB).replace(SHORT, '$1$2' + NB);
+  }
+  // В абзаце последнее слово не остаётся одно на строке.
+  const noWidow = (t) => t.replace(/ (\S+)$/, NB + '$1');
+
+  ADS.forEach((ad, i) => {
+    const el = document.createElement('section');
+    el.className = 'ad' + (i % 3 === 2 ? ' ad--dark' : '');
+    el.dataset.name = ad.name;
+    el.lang = ad.lang;
+    el.innerHTML = `
+      <div class="top">
+        <div class="pain"><h2 class="pain__text"></h2></div>
+        <div class="rule"></div>
+        <p class="solution"></p>
+      </div>
+      <div class="bottom">
+        <div class="bottom__row">
+          <div class="cta"></div>
+          <div class="logo">ADAL REHAB</div>
+        </div>
+        <p class="barrier"></p>
+      </div>`;
+    el.querySelector('.pain__text').textContent = typo(ad.pain);
+    el.querySelector('.solution').textContent = noWidow(typo(ad.solution));
+    el.querySelector('.cta').textContent = ad.cta;
+    el.querySelector('.barrier').textContent = BARRIER[ad.lang];
+    document.body.appendChild(el);
+  });
+  // Балансировка иногда оставляет одно слово на строке. Тогда пробуем обычный
+  // перенос и оставляем вариант, где таких строк меньше.
+  function loneLines(el) {
+    const rows = {};
+    const tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    let n;
+    while ((n = tw.nextNode())) {
+      const re = /[^\s ]+/g;
+      let m;
+      while ((m = re.exec(n.data))) {
+        const r = document.createRange();
+        r.setStart(n, m.index);
+        r.setEnd(n, m.index + m[0].length);
+        const t = Math.round(r.getClientRects()[0].top);
+        rows[t] = (rows[t] || 0) + 1;
+      }
+    }
+    const counts = Object.values(rows);
+    return counts.length > 1 ? counts.filter((c) => c === 1).length : 0;
+  }
+  window.fixWraps = function () {
+    document.querySelectorAll('h1, h2').forEach((h) => {
+      h.style.textWrap = '';
+      const balanced = loneLines(h);
+      if (!balanced) return;
+      h.style.textWrap = 'wrap';
+      if (loneLines(h) >= balanced) h.style.textWrap = '';
+    });
+  };
+  document.fonts.ready.then(window.fixWraps);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1160">
+<title>Adal Rehab — карусели</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=Source+Serif+4:wght@400;600&display=block" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAFAF7;
+    --bg-dark: #14283D;
+    --ink: #14283D;
+    --ink-on-dark: #F3F5F7;
+    --muted: #5A6472;
+    --muted-on-dark: #8DA0B2;
+    --accent: #2E7D6B;
+    --accent-on-dark: #7FC4B2;
+    --line: #DDE2E8;
+
+    --pad: 96px;
+    --serif: "Source Serif 4", Georgia, serif;
+    --sans: "IBM Plex Sans", Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { background: #9A9EA4; }
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 120px;
+    padding: 40px;
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  .carousel {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  /* ---------- Артборд ---------- */
+  .slide {
+    position: relative;
+    flex: none;
+    width: 1080px;
+    height: 1350px;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--ink);
+  }
+  .slide--dark {
+    background: var(--bg-dark);
+    color: var(--ink-on-dark);
+  }
+
+  .content {
+    position: absolute;
+    left: var(--pad);
+    right: var(--pad);
+    top: 232px;
+  }
+
+  /* ---------- Служебные элементы ---------- */
+  .pager {
+    position: absolute;
+    top: var(--pad);
+    right: var(--pad);
+    font-size: 28px;
+    line-height: 1;
+    color: var(--muted);
+    font-feature-settings: "tnum" 1;
+  }
+  .trust {
+    position: absolute;
+    left: var(--pad);
+    right: var(--pad);
+    bottom: var(--pad);
+    text-align: center;
+    font-size: 28px;
+    line-height: 1.3;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    color: var(--muted);
+  }
+  .slide--dark .trust { color: var(--muted-on-dark); }
+
+  /* Логотип (и «Листайте») — строкой над строкой доверия */
+  .brand-row {
+    position: absolute;
+    left: var(--pad);
+    right: var(--pad);
+    bottom: calc(var(--pad) + 36px + 48px);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .logo__name {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 1.2;
+    letter-spacing: 3px;
+    color: var(--ink-on-dark);
+  }
+  .logo__sub {
+    margin-top: 8px;
+    font-size: 28px;
+    line-height: 1.3;
+    color: var(--muted-on-dark);
+  }
+  .swipe {
+    font-size: 28px;
+    line-height: 1.3;
+    color: var(--muted-on-dark);
+  }
+
+  /* ---------- Обложка ---------- */
+  .cover .content { top: 200px; }
+  .overline {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 1.3;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent-on-dark);
+  }
+  .cover__title {
+    margin-top: 44px;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 80px;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+  .cover__sub {
+    margin-top: 48px;
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: 44px;
+    line-height: 1.4;
+    color: var(--muted-on-dark);
+    text-wrap: pretty;
+  }
+
+  /* ---------- Внутренние слайды ---------- */
+  .head {
+    display: flex;
+    gap: 40px;
+  }
+  .head::before {
+    content: "";
+    flex: none;
+    width: 4px;
+    background: var(--accent);
+  }
+  .title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  .body {
+    margin-top: 56px;
+    padding-left: 44px;
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 1.5;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  /* Список с квадратными маркерами (карусель 3) */
+  .list {
+    margin-top: 56px;
+    padding-left: 44px;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .list li {
+    position: relative;
+    padding-left: 40px;
+    font-size: 40px;
+    line-height: 1.5;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 24px;
+    width: 12px;
+    height: 12px;
+    background: var(--accent);
+  }
+  /* Крупная цифра шага (карусель 4) */
+  .num {
+    margin-bottom: 24px;
+    padding-left: 44px;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 120px;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .slide--step .content { top: 200px; }
+
+  /* ---------- Финал ---------- */
+  .final .title { font-size: 64px; }
+  .final .head::before { background: var(--accent-on-dark); }
+  .final .body { color: #C3D2DF; }
+  .cta {
+    display: inline-block;
+    margin-top: 64px;
+    margin-left: 44px;
+    padding: 28px 56px;
+    border-radius: 12px;
+    background: var(--accent);
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 40px;
+    line-height: 1.2;
+    color: #FFFFFF;
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+
+<script>
+  /* Карусели. Тексты согласованы и проверены на политику Meta — не менять и не сокращать.
+     Типы слайдов: cover, text, list (карусель 3), step (карусель 4), final. */
+  const RU = {
+    lang: 'ru',
+    trust: 'Анонимно · Не ставим на учёт',
+    finalTrust: 'Бесплатно · Анонимно · Без его ведома',
+    swipe: 'Листайте →',
+    logoSub: null,
+  };
+  const KK = {
+    lang: 'kk',
+    trust: 'Аноним түрде · Есепке қоймаймыз',
+    finalTrust: 'Тегін · Аноним түрде · Оның хабарынсыз',
+    swipe: 'Парақтаңыз →',
+    logoSub: 'Ерлерге арналған оңалту орталығы · Алматы',
+  };
+
+  const CAROUSELS = [
+    { id: 'c1', ...RU, slides: [
+      { type: 'cover', overline: 'Когда в семье зависимость',
+        title: 'Вы говорите ему всё правильно. Почему это не работает?',
+        sub: 'Пять фраз, которые произносят чаще всего — и что стоит сказать вместо них' },
+      { type: 'text', title: '«Просто возьми себя в руки»',
+        text: 'Зависимость — не вопрос силы воли. Призыв собраться человек слышит как обвинение и закрывается.' },
+      { type: 'text', title: '«Подумай о детях»',
+        text: 'Вина не останавливает употребление. Чаще наоборот — усиливает, потому что от вины хочется спрятаться.' },
+      { type: 'text', title: '«Это всё твои друзья»',
+        text: 'Перекладывает причину на других и снимает с человека ответственность. Сменит окружение — ничего не изменится.' },
+      { type: 'text', title: '«Ты обещал, что это последний раз»',
+        text: 'Обещание — не метод лечения. Оно даёт семье надежду, а человеку — отсрочку.' },
+      { type: 'text', title: '«Если не бросишь — я уйду»',
+        text: 'Граница работает, только если вы готовы её удержать. Невыполненная угроза обесценивает все следующие.' },
+      { type: 'final', title: 'Что сказать вместо этого — зависит от вашей ситуации',
+        text: 'Опишите, что происходит. Специалист ответит, какие слова сработают именно у вас.',
+        cta: 'Разобрать мою ситуацию' },
+    ] },
+
+    { id: 'c2', ...RU, slides: [
+      { type: 'cover', overline: 'Когда он отрицает',
+        title: '«У меня всё под контролем» — и разговор закончен?',
+        sub: 'Что делать, когда человек не видит проблемы' },
+      { type: 'text', title: 'Он правда так считает',
+        text: 'Отрицание — не хитрость и не упрямство. Это часть болезни: мозг защищает то, от чего зависит.' },
+      { type: 'text', title: 'Не спорьте фактами',
+        text: 'Чем больше доказательств вы приводите, тем сильнее сопротивление. Спор укрепляет защиту, а не ломает её.' },
+      { type: 'text', title: 'Говорите о себе',
+        text: '«Я не сплю ночами» работает лучше, чем «ты опять напился». О вашем состоянии спорить невозможно.' },
+      { type: 'text', title: 'Предлагайте один шаг',
+        text: 'Не «поезжай лечиться», а «поговори один раз со специалистом». Большое решение пугает, маленькое — нет.' },
+      { type: 'text', title: 'Обозначьте одну границу',
+        text: 'Ту, которую точно выдержите. Не «я уйду», а «я больше не буду отдавать долги».' },
+      { type: 'final', title: 'Если он всё равно отказывается — начните без него',
+        text: 'Консультация для родственников. Разберём вашу ситуацию и скажем, с чего начать.',
+        cta: 'Начать без него' },
+    ] },
+
+    { id: 'c3', ...RU, slides: [
+      { type: 'cover', overline: 'Где проходит граница',
+        title: 'Это ещё привычка или уже зависимость?',
+        sub: 'Три признака по каждой из трёх проблем' },
+      { type: 'list', title: 'Алкоголь', items: [
+        'Остановиться не получается даже после твёрдого решения',
+        'Появляются провалы в памяти и утреннее «поправиться»',
+        'Растёт доза, а последствия перестают останавливать',
+      ] },
+      { type: 'list', title: 'Наркотики', items: [
+        'Из дома пропадают деньги и вещи',
+        'Резко меняется круг общения и режим сна',
+        'Человек избегает прямых разговоров',
+      ] },
+      { type: 'list', title: 'Игры и ставки', items: [
+        'Проигрыш вызывает желание поставить больше',
+        'Появляются займы, о которых семья не знала',
+        'Ставки продолжаются вопреки обещаниям',
+      ] },
+      { type: 'text', title: 'Общий признак',
+        text: 'Человек несколько раз пытался прекратить сам — и каждый раз возвращался. Это и есть граница, после которой нужна помощь со стороны.' },
+      { type: 'final', title: 'Не уверены, ваш ли это случай?',
+        text: 'Опишите ситуацию — специалист ответит в течение дня.',
+        cta: 'Написать в WhatsApp' },
+    ] },
+
+    { id: 'c4', ...RU, slides: [
+      { type: 'cover', overline: 'Без сюрпризов',
+        title: 'Боитесь написать, потому что не знаете, что будет дальше?',
+        sub: 'Рассказываем по шагам, что происходит после вашего сообщения' },
+      { type: 'step', num: '1', title: 'Отвечает человек',
+        text: 'Не бот и не менеджер по продажам. Специалист по зависимостям.' },
+      { type: 'step', num: '2', title: 'Вопросы о ситуации',
+        text: 'Что происходит, как давно, кто рядом. О деньгах — только если вы сами спросите.' },
+      { type: 'step', num: '3', title: 'Никаких звонков без спроса',
+        text: 'Если говорить тяжело — остаёмся в переписке. Вы сами решаете, когда и как.' },
+      { type: 'step', num: '4', title: 'Не ставим на учёт',
+        text: 'Информация не передаётся третьим лицам. Переписку можно удалить в любой момент.' },
+      { type: 'final', title: 'Вы ничего не обязаны решать сразу',
+        text: 'Даже один разговор даёт понимание, что делать дальше.',
+        cta: 'Написать специалисту' },
+    ] },
+
+    { id: 'c5', ...KK, slides: [
+      { type: 'cover', overline: 'Шекара қайда',
+        title: 'Бұл әлі әдет пе, әлде тәуелділік пе?',
+        sub: 'Отбасы бірінші болып байқайтын белгілер' },
+      { type: 'text', title: 'Бірінші белгі',
+        text: 'Адам бірнеше рет тоқтатуға тырысады, бірақ қайта бастайды.' },
+      { type: 'text', title: 'Екінші белгі',
+        text: 'Отбасындағы қарым-қатынас пен жұмыс зардап шегеді.' },
+      { type: 'text', title: 'Үшінші белгі',
+        text: 'Ақша жоғалады, түсініксіз қарыздар пайда болады.' },
+      { type: 'text', title: 'Маңыздысы',
+        text: 'Тәуелділік — жай ғана жаман әдет емес. Оны айыптаумен немесе уәдемен шешуге болмайды.' },
+      { type: 'final', title: 'Жағдайыңызды жазыңыз — маман жауап береді',
+        text: 'Аноним түрде, оның хабарынсыз.',
+        cta: 'Кеңес алу' },
+    ] },
+  ];
+
+  // Типографика без правки текста: неразрывный пробел перед тире и после
+  // коротких слов, чтобы они не висели в конце строки.
+  const NB = ' ';
+  const SHORT = /(^|[\s«(])([А-Яа-яЁёӘәҒғҚқҢңӨөҰұҮүҺһІі]{1,2})\s/g;
+  function typo(t) {
+    return t.replace(/ —/g, NB + '—').replace(SHORT, '$1$2' + NB).replace(SHORT, '$1$2' + NB);
+  }
+  const noWidow = (t) => t.replace(/ (\S+)$/, NB + '$1');
+  const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const para = (t) => esc(noWidow(typo(t)));
+  const head = (t) => esc(typo(t));
+
+  function brandRow(c, withSwipe) {
+    return `
+      <div class="brand-row">
+        <div class="logo">
+          <div class="logo__name">ADAL REHAB</div>
+          ${c.logoSub ? `<div class="logo__sub">${esc(c.logoSub)}</div>` : ''}
+        </div>
+        ${withSwipe ? `<div class="swipe">${esc(c.swipe)}</div>` : ''}
+      </div>`;
+  }
+
+  function slideHTML(c, s, i, total) {
+    const pager = `<div class="pager">${String(i + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}</div>`;
+    switch (s.type) {
+      case 'cover':
+        return `
+          <div class="content">
+            <p class="overline">${esc(s.overline)}</p>
+            <h1 class="cover__title">${head(s.title)}</h1>
+            <p class="cover__sub">${para(s.sub)}</p>
+          </div>
+          ${brandRow(c, true)}
+          <p class="trust">${esc(c.trust)}</p>`;
+      case 'text':
+        return `${pager}
+          <div class="content">
+            <div class="head"><h2 class="title">${head(s.title)}</h2></div>
+            <p class="body">${para(s.text)}</p>
+          </div>
+          <p class="trust">${esc(c.trust)}</p>`;
+      case 'list':
+        return `${pager}
+          <div class="content">
+            <div class="head"><h2 class="title">${head(s.title)}</h2></div>
+            <ul class="list">${s.items.map((t) => `<li>${para(t)}</li>`).join('')}</ul>
+          </div>
+          <p class="trust">${esc(c.trust)}</p>`;
+      case 'step':
+        return `${pager}
+          <div class="content">
+            <div class="num">${s.num}</div>
+            <div class="head"><h2 class="title">${head(s.title)}</h2></div>
+            <p class="body">${para(s.text)}</p>
+          </div>
+          <p class="trust">${esc(c.trust)}</p>`;
+      case 'final':
+        return `
+          <div class="content">
+            <div class="head"><h2 class="title">${head(s.title)}</h2></div>
+            <p class="body">${para(s.text)}</p>
+            <div class="cta">${esc(s.cta)}</div>
+          </div>
+          ${brandRow(c, false)}
+          <p class="trust">${esc(c.finalTrust)}</p>`;
+    }
+  }
+
+  for (const c of CAROUSELS) {
+    const wrap = document.createElement('div');
+    wrap.className = 'carousel';
+    wrap.dataset.id = c.id;
+    c.slides.forEach((s, i) => {
+      const el = document.createElement('section');
+      const dark = s.type === 'cover' || s.type === 'final';
+      el.className = `slide ${s.type}` + (dark ? ' slide--dark' : '') + (s.type === 'step' ? ' slide--step' : '');
+      el.dataset.name = `${c.id}-${String(i + 1).padStart(2, '0')}`;
+      el.lang = c.lang;
+      el.innerHTML = slideHTML(c, s, i, c.slides.length);
+      wrap.appendChild(el);
+    });
+    document.body.appendChild(wrap);
+  }
+  // Балансировка иногда оставляет одно слово на строке. Тогда пробуем обычный
+  // перенос и оставляем вариант, где таких строк меньше.
+  function loneLines(el) {
+    const rows = {};
+    const tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    let n;
+    while ((n = tw.nextNode())) {
+      const re = /[^\s ]+/g;
+      let m;
+      while ((m = re.exec(n.data))) {
+        const r = document.createRange();
+        r.setStart(n, m.index);
+        r.setEnd(n, m.index + m[0].length);
+        const t = Math.round(r.getClientRects()[0].top);
+        rows[t] = (rows[t] || 0) + 1;
+      }
+    }
+    const counts = Object.values(rows);
+    return counts.length > 1 ? counts.filter((c) => c === 1).length : 0;
+  }
+  window.fixWraps = function () {
+    document.querySelectorAll('h1, h2').forEach((h) => {
+      h.style.textWrap = '';
+      const balanced = loneLines(h);
+      if (!balanced) return;
+      h.style.textWrap = 'wrap';
+      if (loneLines(h) >= balanced) h.style.textWrap = '';
+    });
+  };
+  document.fonts.ready.then(window.fixWraps);
+</script>
+
+</body>
+</html>
