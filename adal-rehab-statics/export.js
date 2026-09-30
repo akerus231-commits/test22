@@ -7,6 +7,7 @@
 //
 // По умолчанию файлы ровно в размер площадки; --scale=2 даёт удвоенные
 // (2160×2160, 2160×3840). Шрифты грузятся с Google Fonts — нужен интернет.
+// Фото фонов лежат в bg/ (имя задаётся полем photo в statics.html).
 
 const path = require('path');
 const fs = require('fs');
@@ -28,6 +29,15 @@ const FORMATS = { square: '1080x1080', story: '1080x1920' };
 
   await page.goto('file://' + SRC, { waitUntil: 'networkidle' });
   await page.evaluate(() => document.fonts.ready);
+  const brokenPhotos = await page.evaluate(() =>
+    [...document.querySelectorAll('img.ad__photo')]
+      .filter((img) => !img.complete || img.naturalWidth === 0)
+      .map((img) => img.getAttribute('src')));
+  if (brokenPhotos.length) {
+    console.error('Не загрузились фото:', [...new Set(brokenPhotos)].join(', '));
+    await browser.close();
+    process.exit(1);
+  }
 
   // document.fonts.check() возвращает true и при системном фолбэке,
   // поэтому проверяем, что веб-шрифты реально загружены.
