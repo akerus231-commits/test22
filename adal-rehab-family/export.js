@@ -5,7 +5,7 @@
 //   npm install
 //   npm run export            # или: node export.js [папка-вывода]
 //
-// Шрифты грузятся с Google Fonts, поэтому нужен интернет.
+// Шрифты грузятся с Google Fonts, поэтому нужен интернет. Фото фонов — в bg/.
 
 const path = require('path');
 const fs = require('fs');
@@ -40,6 +40,15 @@ async function checkFonts(page) {
     await page.goto('file://' + path.join(__dirname, src.file), { waitUntil: 'networkidle' });
     await page.evaluate(() => document.fonts.ready);
     await page.evaluate(() => window.fixWraps && window.fixWraps());
+    const broken = await page.evaluate(() =>
+      [...document.querySelectorAll('img.bg-photo')]
+        .filter((img) => !img.complete || img.naturalWidth === 0)
+        .map((img) => img.getAttribute('src')));
+    if (broken.length) {
+      console.error(`${src.file}: не загрузились фото:`, [...new Set(broken)].join(', '));
+      await browser.close();
+      process.exit(1);
+    }
     const missing = await checkFonts(page);
     if (missing.length) {
       console.error(`${src.file}: шрифты не загрузились:`, missing.join(', '));

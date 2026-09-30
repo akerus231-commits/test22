@@ -57,6 +57,20 @@
     color: var(--ink-on-dark);
   }
 
+
+  /* ---------- Фото-фон ----------
+     Человек со спины или силуэтом, лицо не читается. Затемнение — сплошной слой
+     фирменного тёмно-синего 72% (без градиентов и теней), текст сохраняет контраст. */
+  .bg-photo, .bg-shade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .bg-photo { object-fit: cover; }
+  .bg-shade { background: rgba(20, 40, 61, 0.72); }
+
+  .content, .pager, .trust, .brand-row { z-index: 1; }
   .content {
     position: absolute;
     left: var(--pad);
@@ -254,7 +268,7 @@
   };
 
   const CAROUSELS = [
-    { id: 'c1', ...RU, slides: [
+    { id: 'c1', coverPhoto: 'kitchen', finalPhoto: 'phone', ...RU, slides: [
       { type: 'cover', overline: 'Когда в семье зависимость',
         title: 'Вы говорите ему всё правильно. Почему это не работает?',
         sub: 'Пять фраз, которые произносят чаще всего — и что стоит сказать вместо них' },
@@ -273,7 +287,7 @@
         cta: 'Разобрать мою ситуацию' },
     ] },
 
-    { id: 'c2', ...RU, slides: [
+    { id: 'c2', coverPhoto: 'door', finalPhoto: 'window', ...RU, slides: [
       { type: 'cover', overline: 'Когда он отрицает',
         title: '«У меня всё под контролем» — и разговор закончен?',
         sub: 'Что делать, когда человек не видит проблемы' },
@@ -292,7 +306,7 @@
         cta: 'Начать без него' },
     ] },
 
-    { id: 'c3', ...RU, slides: [
+    { id: 'c3', coverPhoto: 'doorway', finalPhoto: 'phone', ...RU, slides: [
       { type: 'cover', overline: 'Где проходит граница',
         title: 'Это ещё привычка или уже зависимость?',
         sub: 'Три признака по каждой из трёх проблем' },
@@ -318,7 +332,7 @@
         cta: 'Написать в WhatsApp' },
     ] },
 
-    { id: 'c4', ...RU, slides: [
+    { id: 'c4', coverPhoto: 'phone', finalPhoto: 'window', ...RU, slides: [
       { type: 'cover', overline: 'Без сюрпризов',
         title: 'Боитесь написать, потому что не знаете, что будет дальше?',
         sub: 'Рассказываем по шагам, что происходит после вашего сообщения' },
@@ -335,7 +349,7 @@
         cta: 'Написать специалисту' },
     ] },
 
-    { id: 'c5', ...KK, slides: [
+    { id: 'c5', coverPhoto: 'kitchen', finalPhoto: 'phone', ...KK, slides: [
       { type: 'cover', overline: 'Шекара қайда',
         title: 'Бұл әлі әдет пе, әлде тәуелділік пе?',
         sub: 'Отбасы бірінші болып байқайтын белгілер' },
@@ -432,7 +446,10 @@
       el.className = `slide ${s.type}` + (dark ? ' slide--dark' : '') + (s.type === 'step' ? ' slide--step' : '');
       el.dataset.name = `${c.id}-${String(i + 1).padStart(2, '0')}`;
       el.lang = c.lang;
-      el.innerHTML = slideHTML(c, s, i, c.slides.length);
+      const photo = s.type === 'cover' ? c.coverPhoto : s.type === 'final' ? c.finalPhoto : null;
+      el.innerHTML = (photo
+        ? `<img class="bg-photo" src="bg/${photo}.jpg" alt=""><div class="bg-shade"></div>`
+        : '') + slideHTML(c, s, i, c.slides.length);
       wrap.appendChild(el);
     });
     document.body.appendChild(wrap);
