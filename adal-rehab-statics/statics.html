@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1160">
+<title>Adal Rehab — статичные макеты</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=Source+Serif+4:wght@400;600&display=block" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAFAF7;
+    --bg-dark: #14283D;
+    --ink: #14283D;
+    --ink-on-dark: #F3F5F7;
+    --muted: #5A6472;
+    --muted-on-dark: #8DA0B2;
+    --teal: #2E7D6B;
+    --teal-on-dark: #7FC4B2;
+    --warm: #C2703F;
+    --line: #DDE2E8;
+
+    --pad: 96px;
+    --serif: "Source Serif 4", Georgia, serif;
+    --sans: "IBM Plex Sans", Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { background: #9A9EA4; }
+  body {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 80px;
+    padding: 40px;
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Форматы ----------
+     square 1080×1080 — лента (кнопка рекламы под картинкой), поля 96px.
+     story  1080×1920 — Stories/Reels: сверху 250px занимают имя профиля
+     и прогресс-бар, снизу 384px — кнопка рекламы. Контент между ними. */
+  .deck {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  .deck__label {
+    font-size: 28px;
+    color: #FFFFFF;
+    letter-spacing: 1px;
+  }
+  .deck[data-format="square"] {
+    --h: 1080px;
+    --safe-top: var(--pad);
+    --safe-bottom: var(--pad);
+    --hook-size: 76px;
+    --sub-size: 34px;
+  }
+  .deck[data-format="story"] {
+    --h: 1920px;
+    --safe-top: 330px;
+    --safe-bottom: 384px;
+    --hook-size: 84px;
+    --sub-size: 40px;
+  }
+
+  /* ---------- Артборд ---------- */
+  .ad {
+    position: relative;
+    flex: none;
+    width: 1080px;
+    height: var(--h);
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--ink);
+
+    /* Цвета элементов; тёмный макет переопределяет их ниже */
+    --c-overline: var(--teal);
+    --c-hook: var(--ink);
+    --c-sub: var(--muted);
+    --c-bar: var(--teal);
+    --c-trust: var(--muted);
+    --c-logo: var(--ink);
+  }
+  .ad--dark {
+    background: var(--bg-dark);
+    --c-overline: var(--teal-on-dark);
+    --c-hook: var(--ink-on-dark);
+    --c-sub: #AFC0CF;
+    --c-bar: var(--teal-on-dark);
+    --c-trust: var(--muted-on-dark);
+    --c-logo: var(--ink-on-dark);
+  }
+
+  /* ---------- Верх: надзаголовок, хук, подзаголовок ---------- */
+  .top {
+    position: absolute;
+    top: var(--safe-top);
+    left: var(--pad);
+    right: var(--pad);
+  }
+  .overline {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 1.3;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--c-overline);
+  }
+  .hook {
+    display: flex;
+    gap: 32px;
+    margin-top: 48px;
+  }
+  .hook::before {
+    content: "";
+    flex: none;
+    width: 4px;
+    background: var(--c-bar);
+  }
+  .hook__text {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: var(--hook-size);
+    line-height: 1.15;
+    color: var(--c-hook);
+    text-wrap: balance;
+  }
+  .sub {
+    margin-top: 48px;
+    padding-left: 36px;
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: var(--sub-size);
+    line-height: 1.45;
+    color: var(--c-sub);
+    text-wrap: pretty;
+  }
+
+  /* ---------- Низ: кнопка + логотип, строка доверия ---------- */
+  .bottom {
+    position: absolute;
+    left: var(--pad);
+    right: var(--pad);
+    bottom: var(--safe-bottom);
+  }
+  /* Если кнопка длинная и не помещается рядом с логотипом,
+     логотип переносится строкой выше — остаётся внизу справа. */
+  .bottom__row {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px 32px;
+  }
+  .cta {
+    padding: 24px 48px;
+    border-radius: 12px;
+    background: var(--teal);
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 1.2;
+    color: #FFFFFF;
+    white-space: nowrap;
+  }
+  .logo {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 1.2;
+    letter-spacing: 3px;
+    color: var(--c-logo);
+    white-space: nowrap;
+    margin-left: auto;
+  }
+  .trust {
+    margin-top: 32px;
+    font-size: 28px;
+    line-height: 1.3;
+    letter-spacing: 1px;
+    color: var(--c-trust);
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+
+<script>
+  /* Серии макетов. Внутри серии каждый третий макет (3, 6, 9…) тёмный.
+     name — имя PNG-файла; lang — 'ru' или 'kk' (от него зависит строка доверия).
+     Тексты согласованы — не править. */
+  const SERIES = {
+    'Алкоголь': [
+      { name: 'a-01', lang: 'ru', overline: 'Алкоголь',
+        hook: '«Я могу остановиться в любой момент» — самая частая фраза в разговоре о зависимости',
+        sub: 'Если попытки прекратить снова заканчиваются срывом — это уже не вопрос силы воли.',
+        cta: 'Получить консультацию' },
+      { name: 'a-02', lang: 'ru', overline: 'Алкоголь',
+        hook: '«Пью только по выходным» — это не всегда значит, что проблемы нет',
+        sub: 'Важно не как часто человек пьёт, а может ли он остановиться и что происходит после.',
+        cta: 'Получить консультацию' },
+      { name: 'a-03-kz', lang: 'kk', overline: 'Алкоголь',
+        hook: 'Алкогольдің проблемаға айналғанын қалай түсінуге болады?',
+        sub: 'Ішуді тоқтату қиын. Отбасы мен жұмыс зардап шегеді. Қоюға тырысқанымен, қайта бастайды.',
+        cta: 'Кеңес алу' },
+      { name: 'a-04-kz', lang: 'kk', overline: 'Отбасыға',
+        hook: 'Алкогольге тәуелділік — бір адамның ғана мәселесі емес',
+        sub: 'Не айту керек? Қалай қолдау көрсету керек? Қай кезде маманға жүгіну қажет?',
+        cta: 'Жақыныңыз үшін кеңес алу' },
+    ],
+    'Наркотики': [
+      { name: 'n-01', lang: 'ru', overline: 'Наркотики',
+        hook: 'Когда из дома начинают пропадать деньги и вещи — это то, что семья замечает первым',
+        sub: 'Часто за этим стоит не воровство, а зависимость.',
+        cta: 'Расскажем, что делать' },
+      { name: 'n-02', lang: 'ru', overline: 'Отрицание',
+        hook: '«У меня всё под контролем» — так звучит не упрямство, а часть болезни',
+        sub: 'Человек в зависимости действительно не видит масштаб проблемы. С отрицанием работают отдельно — и начать можно без него.',
+        cta: 'Консультация для родственников' },
+      { name: 'n-03', lang: 'ru', overline: 'Если отказывается',
+        hook: 'Что делать, если человек отказывается лечиться?',
+        sub: 'Перестать скрывать последствия. Не спорить, а обозначить границы. Получить консультацию самим, без него.',
+        cta: 'Разберём вашу ситуацию' },
+      { name: 'n-04-kz', lang: 'kk', overline: 'Нашақорлық',
+        hook: 'Үйден ақша мен заттар жоғала бастаса — мұны отбасы бірінші болып байқайды',
+        sub: 'Көбіне мұның артында ұрлық емес, тәуелділік тұрады.',
+        cta: 'Кеңес алу' },
+    ],
+    'Игромания': [
+      { name: 'l-01', lang: 'ru', overline: 'Ставки',
+        hook: '«Это последняя ставка. Отыграюсь — и всё». Эту фразу человек повторяет десятки раз',
+        sub: 'Если остановиться не получается — проблема уже не в удаче.',
+        cta: 'Получить консультацию' },
+      { name: 'l-02', lang: 'ru', overline: 'Ставки',
+        hook: 'Есть разница: ставить, чтобы выиграть — и ставить, чтобы вернуть проигранное',
+        sub: 'Вторая ситуация почти всегда заканчивается долгами.',
+        cta: 'Консультация по игромании' },
+      { name: 'l-03-kz', lang: 'kk', overline: 'Лудомания',
+        hook: 'Тағы бір ставка. Тағы бір ұтылыс. Тағы бір қарыз.',
+        sub: 'Бұл шеңберді тоқтату қиын болып жүр ме? Лудомания адамның қарым-қатынасына, қаржысына және күнделікті өміріне әсер етеді.',
+        cta: 'Маманнан кеңес алу' },
+    ],
+    'Квиз': [
+      { name: 'k-01', lang: 'ru', overline: '5 вопросов',
+        hook: 'Пять вопросов — и мы скажем, с чего начать',
+        sub: 'Ответьте анонимно: кому нужна помощь, что происходит и как давно. Специалист напишет, какие шаги имеют смысл в вашей ситуации.',
+        cta: 'Пройти за 2 минуты' },
+      { name: 'k-02', lang: 'ru', overline: '5 вопросов',
+        hook: 'Не знаете, зависимость это уже или ещё нет?',
+        sub: 'Пять коротких вопросов помогут понять, на какой стадии ситуация и нужна ли профессиональная помощь.',
+        cta: 'Пройти опрос' },
+    ],
+  };
+
+  const TRUST = {
+    ru: 'Анонимно · Не ставим на учёт · Круглосуточно',
+    kk: 'Аноним түрде · Есепке қоймаймыз · Тәулік бойы',
+  };
+
+  // Типографика без правки текста: неразрывный пробел перед тире
+  // и после коротких слов, чтобы они не висели в конце строки.
+  const NB = ' ';
+  function typo(t) {
+    return t
+      .replace(/ —/g, NB + '—')
+      .replace(/(^|[\s«(])([А-Яа-яЁёӘәҒғҚқҢңӨөҰұҮүҺһІі]{1,2})\s/g, (m, a, w) => a + w + NB)
+      .replace(/(^|[\s«(])([А-Яа-яЁёӘәҒғҚқҢңӨөҰұҮүҺһІі]{1,2})\s/g, (m, a, w) => a + w + NB);
+  }
+
+  function render(ad, dark) {
+    const el = document.createElement('section');
+    el.className = 'ad' + (dark ? ' ad--dark' : '');
+    el.dataset.name = ad.name;
+    el.lang = ad.lang;
+    el.innerHTML = `
+      <div class="top">
+        <p class="overline"></p>
+        <div class="hook"><h2 class="hook__text"></h2></div>
+        <p class="sub"></p>
+      </div>
+      <div class="bottom">
+        <div class="bottom__row">
+          <div class="cta"></div>
+          <div class="logo">ADAL REHAB</div>
+        </div>
+        <p class="trust"></p>
+      </div>`;
+    el.querySelector('.overline').textContent = ad.overline;
+    el.querySelector('.hook__text').textContent = typo(ad.hook);
+    // последнее слово подзаголовка не оставляем одно на строке
+    el.querySelector('.sub').textContent = typo(ad.sub).replace(/ (\S+)$/, NB + '$1');
+    el.querySelector('.cta').textContent = ad.cta;
+    el.querySelector('.trust').textContent = TRUST[ad.lang];
+    return el;
+  }
+
+  for (const [format, label] of [['square', '1080 × 1080 · лента'], ['story', '1080 × 1920 · Stories / Reels']]) {
+    const deck = document.createElement('main');
+    deck.className = 'deck';
+    deck.dataset.format = format;
+    deck.innerHTML = `<p class="deck__label">${label}</p>`;
+    for (const list of Object.values(SERIES)) {
+      list.forEach((ad, i) => deck.appendChild(render(ad, i % 3 === 2)));
+    }
+    document.body.appendChild(deck);
+  }
+
+  // Подгонка хука под каждый макет: берём самый крупный кегль (шаг 4px, не меньше 60px),
+  // при котором блок помещается над кнопкой и ни одна строка хука не состоит из одного слова.
+  // Если так не выходит ни на одном кегле — самый крупный, при котором текст помещается.
+  function lineWords(el) {
+    const rows = {};
+    const tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    let n;
+    while ((n = tw.nextNode())) {
+      const re = /[^\s ]+/g;
+      let m;
+      while ((m = re.exec(n.data))) {
+        const r = document.createRange();
+        r.setStart(n, m.index);
+        r.setEnd(n, m.index + m[0].length);
+        const t = Math.round(r.getClientRects()[0].top);
+        rows[t] = (rows[t] || 0) + 1;
+      }
+    }
+    return Object.values(rows);
+  }
+
+  window.fitAds = function () {
+    const MIN_GAP = 64, MIN_HOOK = 60, MIN_SUB = 30;
+    document.querySelectorAll('.ad').forEach((ad) => {
+      const top = ad.querySelector('.top');
+      const bottom = ad.querySelector('.bottom');
+      const hook = ad.querySelector('.hook__text');
+      const sub = ad.querySelector('.sub');
+      hook.style.fontSize = sub.style.fontSize = '';
+      const start = parseFloat(getComputedStyle(hook).fontSize);
+      let s = parseFloat(getComputedStyle(sub).fontSize);
+      const fits = () => top.getBoundingClientRect().bottom + MIN_GAP <= bottom.getBoundingClientRect().top;
+      const clean = () => lineWords(hook).every((c) => c > 1);
+
+      let best = null, firstFit = null;
+      for (let h = start; h >= MIN_HOOK; h -= 4) {
+        hook.style.fontSize = h + 'px';
+        if (!fits()) continue;
+        if (firstFit === null) firstFit = h;
+        if (clean()) { best = h; break; }
+      }
+      let h = best ?? firstFit ?? MIN_HOOK;
+      hook.style.fontSize = h + 'px';
+      while (!fits() && s > MIN_SUB) { s -= 2; sub.style.fontSize = s + 'px'; }
+      ad.dataset.fit = `${h}/${s}` + (fits() ? '' : ' OVERFLOW') + (clean() ? '' : ' LONE-WORD');
+
+      // Stories: текстовый блок по центру между верхней безопасной зоной и кнопкой.
+      if (ad.closest('.deck').dataset.format === 'story') {
+        top.style.transform = '';
+        const free = bottom.getBoundingClientRect().top - top.getBoundingClientRect().bottom - MIN_GAP;
+        if (free > 0) top.style.transform = `translateY(${Math.round(free / 2)}px)`;
+      }
+    });
+  };
+  document.fonts.ready.then(window.fitAds);
+</script>
+
+</body>
+</html>
