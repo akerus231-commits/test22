@@ -59,6 +59,8 @@
     --h1: 92px;
     --gap: 30px;
     --runes-top: 590px;
+    --photo-top: 40px;
+    --photo-w: 660px;
   }
   .ad[data-format="story"] {
     height: 1920px;
@@ -68,6 +70,8 @@
     --h1: 104px;
     --gap: 48px;
     --runes-top: 1700px;
+    --photo-top: 200px;
+    --photo-w: 720px;
   }
 
   .ad__inner {
@@ -78,6 +82,23 @@
     flex-direction: column;
     gap: var(--gap);
     padding: var(--pad-top) var(--pad-x) var(--pad-bottom);
+  }
+
+  /* ---------- Фото: справа от заголовка, растворяется в фоне ---------- */
+  .photo {
+    position: absolute;
+    z-index: 1;
+    right: -60px;
+    top: var(--photo-top);
+    width: var(--photo-w);
+    -webkit-mask-image:
+      linear-gradient(to bottom, transparent 0%, #000 14%, #000 62%, transparent 96%),
+      linear-gradient(to right, transparent 0%, #000 22%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(to bottom, transparent 0%, #000 14%, #000 62%, transparent 96%),
+      linear-gradient(to right, transparent 0%, #000 22%);
+    mask-composite: intersect;
   }
 
   /* ---------- Руны — полоса орнамента, как на рекламе карты ---------- */
@@ -256,6 +277,7 @@
 <body>
 
 <template id="tpl">
+  <img class="photo" src="photo/manager.jpg" alt="">
   <div class="runes" aria-hidden="true">𐰴𐰆𐰺𐰍𐰃𐰕 𐱅𐰇𐰼𐰰 𐰋𐰃𐰠𐰏𐰀 𐰉𐰆𐰑𐰣 𐰴𐰆𐰺𐰍𐰃𐰕 𐱅𐰇𐰼𐰰</div>
   <div class="ad__inner">
     <div class="top">
