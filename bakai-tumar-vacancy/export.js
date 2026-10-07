@@ -1,0 +1,64 @@
+// Экспорт баннера вакансии в PNG:
+//   png/vacancy-1080x1350.png — лента Instagram (4:5)
+//   png/vacancy-1080x1920.png — Stories / Reels
+//
+//   npm install
+//   npm run export            # или: node export.js [папка-вывода] [--scale=2]
+//
+// Шрифт Montserrat грузится с Google Fonts — нужен интернет.
+
+const path = require('path');
+const fs = require('fs');
+const { chromium } = require('playwright');
+
+const SRC = path.join(__dirname, 'banner.html');
+const args = process.argv.slice(2);
+const scaleArg = args.find((a) => a.startsWith('--scale='));
+const SCALE = scaleArg ? Number(scaleArg.split('=')[1]) : 1;
+const OUT = path.resolve(args.find((a) => !a.startsWith('--')) || path.join(__dirname, 'png'));
+
+(async () => {
+  const browser = await chromium.launch();
+  const page = await browser.newPage({
+    viewport: { width: 2400, height: 2000 },
+    deviceScaleFactor: SCALE,
+  });
+
+  await page.goto('file://' + SRC, { waitUntil: 'networkidle' });
+  await page.evaluate(() => document.fonts.ready);
+
+  // document.fonts.check() возвращает true и при системном фолбэке,
+  // поэтому проверяем, что веб-шрифт реально загружен.
+  const missing = await page.evaluate(() => {
+    const loaded = [...document.fonts]
+      .filter((f) => f.status === 'loaded')
+      .map((f) => `${f.family.replace(/"/g, '')} ${f.weight}`);
+    return ['Montserrat 600', 'Montserrat 700', 'Montserrat 800', 'Montserrat 900']
+      .filter((f) => !loaded.includes(f));
+  });
+  if (missing.length) {
+    console.error('Шрифты не загрузились:', missing.join(', '));
+    await browser.close();
+    process.exit(1);
+  }
+
+  const overflow = await page.evaluate(() => window.checkFit());
+  if (overflow.length) {
+    console.error('Текст не помещается:', overflow.join(', '));
+    await browser.close();
+    process.exit(1);
+  }
+
+  fs.mkdirSync(OUT, { recursive: true });
+  for (const ad of await page.$$('section.ad')) {
+    const name = await ad.getAttribute('data-name');
+    const file = path.join(OUT, `${name}.png`);
+    await ad.screenshot({ path: file });
+    console.log('→', path.relative(process.cwd(), file));
+  }
+
+  await browser.close();
+})().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
