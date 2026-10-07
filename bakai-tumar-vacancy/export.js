@@ -5,7 +5,7 @@
 //   npm install
 //   npm run export            # или: node export.js [папка-вывода] [--scale=2]
 //
-// Шрифт Montserrat грузится с Google Fonts — нужен интернет.
+// Шрифты Montserrat и Noto Sans Old Turkic (руны) грузятся с Google Fonts — нужен интернет.
 
 const path = require('path');
 const fs = require('fs');
@@ -33,7 +33,7 @@ const OUT = path.resolve(args.find((a) => !a.startsWith('--')) || path.join(__di
     const loaded = [...document.fonts]
       .filter((f) => f.status === 'loaded')
       .map((f) => `${f.family.replace(/"/g, '')} ${f.weight}`);
-    return ['Montserrat 600', 'Montserrat 700', 'Montserrat 800', 'Montserrat 900']
+    return ['Montserrat 500', 'Montserrat 600', 'Montserrat 700', 'Noto Sans Old Turkic 400']
       .filter((f) => !loaded.includes(f));
   });
   if (missing.length) {
