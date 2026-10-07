@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ky">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=2400">
+<title>Тумар — вакансия, вариант B</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Noto+Sans+Old+Turkic&display=block" rel="stylesheet">
+<style>
+  /* Вариант B «Зарплата — герой»: яркий синий фон «Тумар»,
+     главная цифра — 100 000+, условия списком с галочками. */
+  :root {
+    --blue: #2169DE;
+    --blue-mid: #0E46B8;
+    --blue-deep: #012572;
+    --ink: #FFFFFF;
+    --muted: #C9D8F5;
+    --line: rgba(255, 255, 255, 0.22);
+    --font: "Montserrat", Arial, sans-serif;
+    --runes: "Noto Sans Old Turkic", serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #8C929A; }
+  body {
+    display: flex;
+    align-items: flex-start;
+    gap: 80px;
+    padding: 40px;
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* feed 1080×1350, story 1080×1920 (сверху ~220px и снизу ~300px — зоны интерфейса) */
+  .ad {
+    position: relative;
+    flex: none;
+    width: 1080px;
+    overflow: hidden;
+    color: var(--ink);
+    background:
+      radial-gradient(800px 700px at 85% 10%, rgba(120, 170, 255, 0.45) 0%, transparent 70%),
+      linear-gradient(160deg, var(--blue) 0%, var(--blue-mid) 45%, var(--blue-deep) 100%);
+  }
+  .ad[data-format="feed"] {
+    height: 1350px;
+    --pad-top: 72px;
+    --pad-bottom: 72px;
+    --sum: 168px;
+    --gap: 50px;
+    --runes-top: 470px;
+  }
+  .ad[data-format="story"] {
+    height: 1920px;
+    --pad-top: 220px;
+    --pad-bottom: 300px;
+    --sum: 172px;
+    --gap: 56px;
+    --runes-top: 1690px;
+  }
+
+  .ad__inner {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+    padding: var(--pad-top) 80px var(--pad-bottom);
+  }
+
+  .runes {
+    position: absolute;
+    z-index: 1;
+    left: -40px;
+    right: -40px;
+    top: var(--runes-top);
+    font-family: var(--runes);
+    font-size: 96px;
+    letter-spacing: 34px;
+    white-space: nowrap;
+    color: #FFFFFF;
+    opacity: 0.10;
+  }
+
+  .top { display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: baseline; gap: 20px; }
+  .brand__name { font-weight: 700; font-size: 52px; letter-spacing: -1px; }
+  .brand__x { font-weight: 500; font-size: 30px; color: var(--muted); }
+  .brand__bank { font-weight: 700; font-size: 26px; letter-spacing: 3px; color: var(--muted); }
+  .tag {
+    padding: 14px 28px;
+    border-radius: 100px;
+    background: #FFFFFF;
+    color: var(--blue-mid);
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: 1px;
+  }
+
+  .hero__label {
+    font-style: italic;
+    font-weight: 500;
+    font-size: 36px;
+    color: var(--muted);
+  }
+  .hero__sum {
+    font-weight: 800;
+    font-size: var(--sum);
+    line-height: 0.95;
+    letter-spacing: -6px;
+    white-space: nowrap;
+    text-shadow: 0 10px 50px rgba(1, 37, 114, 0.5);
+  }
+  .hero__sum small {
+    font-size: 72px;
+    font-weight: 700;
+    letter-spacing: 0;
+    margin-left: 8px;
+  }
+
+  h1 {
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    padding-top: var(--gap);
+    border-top: 2px solid var(--line);
+  }
+  h1 em {
+    display: block;
+    margin-top: 10px;
+    font-size: 38px;
+    font-style: italic;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .perks {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px 40px;
+  }
+  .perk {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 1.25;
+  }
+  .perk::before {
+    content: "";
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230E46B8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4 8-9'/%3E%3C/svg%3E") center / 26px no-repeat,
+      #FFFFFF;
+  }
+  .ad[data-format="story"] .perks { grid-template-columns: 1fr; gap: 26px; }
+  .ad[data-format="story"] .perk { font-size: 34px; }
+  .ad[data-format="story"] .perk::before { width: 52px; height: 52px; background-size: 30px; }
+
+  .cta {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .cta__text {
+    font-style: italic;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 1.2;
+  }
+  .cta__btn {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 26px 36px;
+    border-radius: 20px;
+    background: #FFFFFF;
+    color: var(--blue-mid);
+    box-shadow: 0 20px 50px rgba(1, 37, 114, 0.45);
+    font-weight: 700;
+    font-size: 28px;
+    white-space: nowrap;
+  }
+  .cta__btn svg { width: 28px; height: 28px; }
+</style>
+</head>
+<body>
+
+<template id="tpl">
+  <div class="runes" aria-hidden="true">𐰴𐰆𐰺𐰍𐰃𐰕 𐱅𐰇𐰼𐰰 𐰋𐰃𐰠𐰏𐰀 𐰉𐰆𐰑𐰣 𐰴𐰆𐰺𐰍𐰃𐰕 𐱅𐰇𐰼𐰰</div>
+  <div class="ad__inner">
+    <div class="top">
+      <div class="brand">
+        <span class="brand__name">тумар</span>
+        <span class="brand__x">×</span>
+        <span class="brand__bank">BAKAI BANK</span>
+      </div>
+      <div class="tag">Вакансия</div>
+    </div>
+
+    <div class="hero">
+      <p class="hero__label">Айлык акы</p>
+      <div class="hero__sum">100 000+<small>сом</small></div>
+    </div>
+
+    <h1>Сатуу бөлүмүнө менеджер керек <em>Чоң мүмкүнчүлүктөр — бирге!</em></h1>
+
+    <ul class="perks">
+      <li class="perk">Расмий жумушка орноштуруу</li>
+      <li class="perk">Толук жумуш менен камсыздоо</li>
+      <li class="perk">График 5/2, 9:00–18:00</li>
+      <li class="perk">Жол жүрүп иштөө мүнөзү</li>
+      <li class="perk">Тажрыйба 1 жылдан ашык болсо — артыкчылык</li>
+      <li class="perk">Карьералык өсүү мүмкүнчүлүгү</li>
+    </ul>
+
+    <div class="cta">
+      <div class="cta__text">Карьераңды жогорку<br>деңгээлге көтөр!</div>
+      <div class="cta__btn">
+        Директке жаз
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </div>
+    </div>
+  </div>
+</template>
+
+<section class="ad" data-format="feed" data-name="vacancy-b-1080x1350"></section>
+<section class="ad" data-format="story" data-name="vacancy-b-1080x1920"></section>
+
+<script>
+  const tpl = document.getElementById('tpl');
+  document.querySelectorAll('section.ad').forEach((ad) => ad.appendChild(tpl.content.cloneNode(true)));
+  window.checkFit = () => [...document.querySelectorAll('section.ad')]
+    .filter((ad) => {
+      const inner = ad.querySelector('.ad__inner');
+      return inner.scrollHeight > inner.clientHeight;
+    })
+    .map((ad) => ad.dataset.name);
+</script>
+</body>
+</html>
