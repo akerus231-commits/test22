@@ -1,8 +1,9 @@
 // Экспорт баннера вакансии в PNG:
-//   png/vacancy[-b|-c]-1080x1350.png — лента Instagram (4:5)
-//   png/vacancy[-b|-c]-1080x1920.png — Stories / Reels
+//   png/vacancy[-b|-c|-ru]-1080x1350.png — лента Instagram (4:5)
+//   png/vacancy[-b|-c|-ru]-1080x1920.png — Stories / Reels
 //
-// Варианты дизайна: banner.html (A), banner-b.html (B), banner-c.html (C).
+// Варианты дизайна: banner.html (A), banner-b.html (B), banner-c.html (C),
+// banner-ru.html — вариант A на русском.
 //
 //   npm install
 //   npm run export            # или: node export.js [папка-вывода] [--scale=2]
@@ -13,7 +14,7 @@ const path = require('path');
 const fs = require('fs');
 const { chromium } = require('playwright');
 
-const SOURCES = ['banner.html', 'banner-b.html', 'banner-c.html'];
+const SOURCES = ['banner.html', 'banner-b.html', 'banner-c.html', 'banner-ru.html'];
 const args = process.argv.slice(2);
 const scaleArg = args.find((a) => a.startsWith('--scale='));
 const SCALE = scaleArg ? Number(scaleArg.split('=')[1]) : 1;
