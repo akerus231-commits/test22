@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1160">
+<title>Тумар — карусели Meta Ads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=block" rel="stylesheet">
+<style>
+  /* Токены сняты с референсов (см. DESIGN.md). */
+  :root {
+    --navy: #1A2332;
+    --navy-glow: #243044;
+    --blue-top: #0D45D4;
+    --blue-bottom: #0539A8;
+    --teal: #00B4A2;
+    --teal-top: #00B5A3;
+    --teal-bottom: #0D8AC4;
+    --white: #FFFFFF;
+    --muted: rgba(255,255,255,.72);
+    --glass-fill: rgba(255,255,255,.10);
+    --glass-line: rgba(255,255,255,.24);
+    --divider: rgba(255,255,255,.55);
+    --pad: 100px;
+    --font: "Manrope", "Gilroy", Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #8E939B; }
+  body {
+    padding: 40px;
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+    color: var(--white);
+  }
+  em { font-style: normal; color: var(--teal); }
+
+  .deck { margin-bottom: 80px; }
+  .deck__label { font-size: 28px; font-weight: 600; margin-bottom: 24px; color: #fff; }
+  .deck__row { display: flex; flex-wrap: wrap; gap: 40px; width: 2200px; }
+
+  /* ---------- Карточка ---------- */
+  .ad {
+    position: relative;
+    width: 1080px;
+    height: 1080px;
+    overflow: hidden;
+    flex: none;
+    background: var(--navy);
+  }
+  .ad--navy {
+    background:
+      radial-gradient(620px 520px at 78% 72%, var(--navy-glow) 0%, rgba(36,48,68,0) 100%),
+      var(--navy);
+  }
+  .ad--blue { background: linear-gradient(180deg, var(--blue-top) 0%, var(--blue-top) 40%, var(--blue-bottom) 100%); }
+  .ad--teal { background: linear-gradient(180deg, var(--teal-top) 0%, #00AAA8 50%, var(--teal-bottom) 100%); }
+  .ad--teal em { color: var(--white); font-weight: 700; }
+
+  /* Водяной знак — огромный символ Тумар, еле заметный. */
+  .wm {
+    position: absolute;
+    width: 1180px;
+    height: auto;
+    aspect-ratio: 342 / 268;
+    color: #fff;
+    opacity: .05;
+    pointer-events: none;
+  }
+  .ad--navy .wm { left: -180px; top: 430px; width: 1240px; opacity: .04; }
+  .ad--blue .wm, .ad--teal .wm { right: -420px; bottom: -380px; width: 980px; }
+  .ad--blue .wm { color: #001A66; opacity: .22; }
+  .ad--teal .wm { opacity: .10; }
+
+  /* ---------- Логотипы ---------- */
+  .sym { display: block; overflow: visible; }
+  .logo-tumar {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 0.16em;
+    font-size: 44px;          /* высота логотипа задаётся кеглем */
+    line-height: 1;
+    color: #fff;
+  }
+  .logo-tumar .sym { width: 1.32em; height: 1.04em; }
+  .logo-tumar span {
+    font-weight: 700;
+    font-size: 1.12em;
+    letter-spacing: -0.01em;
+    line-height: .8;
+    padding-bottom: 0.02em;
+  }
+  .logo-bakai {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.28em;
+    font-size: 34px;
+    line-height: 1;
+    color: #fff;
+    letter-spacing: 0.01em;
+  }
+  .logo-bakai svg { width: 1.12em; height: 1.12em; }
+  .logo-bakai b { font-weight: 800; }
+  .logo-bakai i { font-style: normal; font-weight: 300; margin-left: -0.2em; }
+
+  .arrow {
+    position: absolute;
+    top: 112px;
+    right: 96px;
+    width: 34px;
+    height: 20px;
+  }
+
+  /* ---------- Карта Тумар ---------- */
+  .tcard {
+    position: absolute;
+    width: 300px;
+    height: 476px;
+    border-radius: 24px;
+    background:
+      radial-gradient(150px 170px at 50% 44%, #2F7BFF 0%, #0D4FE0 30%, rgba(8,40,140,.85) 58%, rgba(4,12,40,0) 100%),
+      linear-gradient(160deg, #0A0D14 0%, #020306 100%);
+    box-shadow:
+      0 50px 90px rgba(0,0,0,.55),
+      0 10px 24px rgba(0,0,0,.35),
+      inset 0 0 0 1.5px rgba(255,255,255,.10);
+    transform-origin: 50% 50%;
+  }
+  .tcard__bank { position: absolute; top: 28px; left: 0; right: 0; text-align: center; }
+  .tcard__bank .logo-bakai { font-size: 21px; }
+  .tcard__sym { position: absolute; left: 70px; top: 120px; width: 160px; height: 126px; }
+  .tcard__name {
+    position: absolute; top: 262px; left: 0; right: 0;
+    text-align: center; font-size: 36px; font-weight: 700; letter-spacing: -0.01em;
+  }
+  .silver {
+    color: #E6E9EE;
+    background: linear-gradient(180deg, #FFFFFF 0%, #D4D9E0 55%, #9AA2AD 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .tcard__chip {
+    position: absolute; left: 34px; top: 336px; width: 46px; height: 58px; border-radius: 9px;
+    background: linear-gradient(135deg, #F4F5F7 0%, #B9BEC6 45%, #E3E6EA 70%, #9CA3AC 100%);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.25);
+  }
+  .tcard__chip::before, .tcard__chip::after {
+    content: ""; position: absolute; left: 8px; right: 8px; border: 1.5px solid rgba(60,66,76,.55); border-radius: 6px;
+  }
+  .tcard__chip::before { top: 14px; bottom: 14px; }
+  .tcard__chip::after { top: 6px; bottom: 6px; left: 18px; right: 18px; border-radius: 4px; }
+  .tcard__visa {
+    position: absolute; right: 30px; bottom: 26px;
+    font-size: 46px; font-weight: 800; letter-spacing: -0.02em;
+    transform: skewX(-14deg);
+  }
+
+  /* ---------- Обложка ---------- */
+  .cover__top {
+    position: absolute; top: 96px; left: var(--pad); right: var(--pad);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .badge {
+    display: inline-flex; align-items: center;
+    padding: 14px 24px 14px 20px;
+    border-radius: 999px;
+    background: var(--glass-fill);
+    border: 1px solid var(--glass-line);
+  }
+  .badge .logo-tumar { font-size: 30px; }
+  .cover__head {
+    position: absolute; top: 236px; left: var(--pad); width: 880px;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 44px;
+  }
+  .cover__title {
+    font-size: 88px; font-weight: 700; line-height: 1.04; letter-spacing: -0.015em;
+  }
+  .pill {
+    display: inline-flex; align-items: center; gap: 22px;
+    height: 66px; padding: 0 34px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.16);
+    border: 1px solid rgba(255,255,255,.22);
+    font-size: 28px; font-weight: 500;
+  }
+  .pill svg { width: 30px; height: 18px; }
+  .cover__foot {
+    position: absolute; left: var(--pad); bottom: 84px; max-width: 500px;
+    font-size: 25px; font-weight: 500; line-height: 1.45; color: var(--muted);
+  }
+  .cover .tcard { right: 140px; top: 542px; transform: rotate(12deg) scale(1.15); }
+  .glow { position: absolute; border-radius: 50%; pointer-events: none; filter: blur(10px); }
+
+  /* Варианты обложек по сегментам */
+  .v-stylish .glow--a { width: 760px; height: 760px; right: -200px; top: 380px;
+    background: radial-gradient(closest-side, rgba(0,180,162,.38), rgba(0,180,162,0)); }
+  .v-dynamic .glow--a { width: 820px; height: 820px; right: -240px; top: 360px;
+    background: radial-gradient(closest-side, rgba(13,69,212,.55), rgba(13,69,212,0)); }
+  .v-dynamic .streaks {
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(115deg, rgba(255,255,255,0) 0 120px, rgba(76,130,255,.07) 120px 124px, rgba(255,255,255,0) 124px 260px);
+    mask-image: linear-gradient(90deg, rgba(0,0,0,0) 35%, #000 100%);
+  }
+  .v-warm .glow--a { width: 900px; height: 900px; right: -300px; top: 300px;
+    background: radial-gradient(closest-side, rgba(0,181,163,.42), rgba(13,138,196,.18) 60%, rgba(13,138,196,0)); }
+  .v-warm .glow--b { width: 520px; height: 520px; left: -160px; top: -160px;
+    background: radial-gradient(closest-side, rgba(0,181,163,.18), rgba(0,181,163,0)); }
+  .v-strict .glow--a { width: 700px; height: 700px; right: -160px; top: 440px;
+    background: radial-gradient(closest-side, rgba(13,69,212,.35), rgba(13,69,212,0)); }
+  .v-strict .rule { position: absolute; left: var(--pad); top: 196px; width: 120px; height: 6px; border-radius: 3px; background: var(--teal); }
+  .v-calm .glow--a { width: 900px; height: 900px; right: -280px; top: 320px;
+    background: radial-gradient(closest-side, rgba(13,69,212,.45), rgba(0,181,163,.12) 65%, rgba(0,181,163,0)); }
+
+  /* ---------- Карточка категории: фото 60% + плашка 40% ---------- */
+  .cat__photo {
+    position: absolute; left: 0; top: 0; width: 1080px; height: 720px;
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 64%, rgba(0,0,0,0) 100%);
+            mask-image: linear-gradient(180deg, #000 0%, #000 64%, rgba(0,0,0,0) 100%);
+  }
+  .cat__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cat__photo .ph {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    background: repeating-linear-gradient(45deg, rgba(255,255,255,.08) 0 24px, rgba(255,255,255,.03) 24px 48px), #3A4556;
+    font-size: 30px; font-weight: 600; color: rgba(255,255,255,.8); text-align: center; padding: 0 160px 160px;
+  }
+  .cat__shade {
+    position: absolute; left: 0; top: 0; width: 1080px; height: 260px;
+    background: linear-gradient(180deg, rgba(14,20,32,.55) 0%, rgba(14,20,32,0) 100%);
+  }
+  .cat__top {
+    position: absolute; top: 96px; left: var(--pad);
+  }
+  .cat__top .logo-tumar { font-size: 36px; filter: drop-shadow(0 2px 8px rgba(0,0,0,.25)); }
+  .cat__body {
+    position: absolute; left: var(--pad); right: var(--pad); bottom: 92px;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 30px;
+  }
+  .cat__title {
+    font-size: 80px; font-weight: 700; line-height: 1.02; letter-spacing: -0.015em;
+    text-shadow: 0 2px 24px rgba(0,0,0,.18);
+  }
+  .plate {
+    min-width: 560px;
+    padding: 26px 40px 28px;
+    border-radius: 28px;
+    background: var(--glass-fill);
+    border: 1px solid var(--glass-line);
+    -webkit-backdrop-filter: blur(14px);
+            backdrop-filter: blur(14px);
+  }
+  .plate__item { font-size: 44px; font-weight: 300; line-height: 1.2; }
+  .plate__line { height: 1px; background: var(--divider); margin: 20px 0 18px; }
+  .plate__term { font-size: 58px; font-weight: 600; line-height: 1.1; letter-spacing: -0.01em; }
+
+  /* ---------- Финальная CTA-карточка ---------- */
+  .cta .glow--a { width: 900px; height: 900px; left: 90px; top: 430px;
+    background: radial-gradient(closest-side, rgba(13,69,212,.55), rgba(0,181,163,.12) 62%, rgba(0,181,163,0)); }
+  .cta__title {
+    position: absolute; top: 200px; left: var(--pad); right: var(--pad);
+    text-align: center;
+    font-size: 84px; font-weight: 700; line-height: 1.04; letter-spacing: -0.015em;
+  }
+  .cta__sub {
+    position: absolute; top: 396px; left: var(--pad); right: var(--pad);
+    text-align: center; font-size: 34px; font-weight: 600; color: var(--teal);
+  }
+  .btn {
+    position: absolute; top: 470px; left: 50%; transform: translateX(-50%);
+    display: inline-flex; align-items: center; gap: 20px;
+    height: 76px; padding: 0 40px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #00C2AE 0%, #00A898 100%);
+    box-shadow: 0 14px 30px rgba(0,180,162,.28);
+    font-size: 30px; font-weight: 700; white-space: nowrap;
+  }
+  .btn svg { width: 30px; height: 18px; }
+  .cta .tcard { left: 390px; top: 600px; transform: rotate(-11deg); }
+</style>
+</head>
+<body>
+
+<!-- Векторные символы. Логотипы — аппроксимация по референсам:
+     перед публикацией заменить на официальные SVG бренда. -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="tumar-sym" viewBox="34 38 342 268">
+      <g fill="none" stroke="currentColor" stroke-width="29" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M55 55 C 100 125, 165 160, 220 158 C 275 156, 322 128, 355 105"/>
+        <path d="M205 75 C 175 98, 105 170, 68 222 C 54 244, 62 262, 88 265 L 285 290 C 307 293, 314 280, 308 262 C 287 195, 250 120, 222 82 C 216 74, 210 72, 205 75 Z"/>
+      </g>
+    </symbol>
+    <symbol id="tumar-sym-silver" viewBox="34 38 342 268">
+      <g fill="none" stroke="url(#silver)" stroke-width="29" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M55 55 C 100 125, 165 160, 220 158 C 275 156, 322 128, 355 105"/>
+        <path d="M205 75 C 175 98, 105 170, 68 222 C 54 244, 62 262, 88 265 L 285 290 C 307 293, 314 280, 308 262 C 287 195, 250 120, 222 82 C 216 74, 210 72, 205 75 Z"/>
+      </g>
+    </symbol>
+    <symbol id="bakai-sym" viewBox="0 0 40 40">
+      <circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" stroke-width="4.5"/>
+      <g fill="currentColor">
+        <circle cx="15.2" cy="15.2" r="3.4"/><circle cx="24.8" cy="15.2" r="3.4"/>
+        <circle cx="15.2" cy="24.8" r="3.4"/><circle cx="24.8" cy="24.8" r="3.4"/>
+      </g>
+    </symbol>
+    <symbol id="arrow" viewBox="0 0 34 20">
+      <path d="M1 10 H31 M23 2 L32 10 L23 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <linearGradient id="silver" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#D2D7DE"/><stop offset="1" stop-color="#959DA8"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<main id="decks"></main>
+
+<script>
+// ============================================================
+// ДАННЫЕ. Всё содержание каруселей — здесь.
+// term — срок рассрочки в месяцах; null — без срока («0% переплат»).
+// photo — имя файла в photos/<photo>.jpg; band — цвет нижней части.
+// Цены и расчёты убраны по решению заказчика.
+// ============================================================
+const PHOTOS = {
+  'clothes-young':  'Девушка 25–30 в стильном пальто с пакетами у бутика',
+  'cosmetics':      'Уходовая косметика: баночки, сыворотки, мягкий свет',
+  'cafe-date':      'Красивая подача блюд в кафе, тёплый свет',
+  'groceries':      'Продуктовая корзина: овощи, фрукты, хлеб',
+  'fuel':           'Автомобиль на современной АЗС, вечер',
+  'smartphone':     'Смартфон в руке, без логотипов',
+  'steak':          'Стейк и мужской ужин в ресторане',
+  'clothes-mature': 'Женщина 40–45 выбирает платье в бутике',
+  'washer':         'Стиральная машина в светлой ванной',
+  'fridge':         'Холодильник в современной кухне',
+  'sofa':           'Диван в светлом интерьере гостиной',
+};
+
+const CAROUSELS = [
+  {
+    slug: '1-zh-22-35', label: 'Карусель 1 — Женщины 22–35',
+    cover: { variant: 'stylish', title: 'Рассрочка <em>0%</em><br>на всё, что нравится' },
+    cards: [
+      { title: 'Одежда и обувь',         photo: 'clothes-young', item: 'Куртка',                   term: 6 },
+      { title: 'Косметика и уход',       photo: 'cosmetics',     item: 'Набор уходовой косметики', term: 6 },
+      { title: 'Кафе и рестораны',       photo: 'cafe-date',     item: 'Ужин в ресторане',         term: 6 },
+      { title: 'Продукты<br>тоже по Тумар', photo: 'groceries',     item: 'Продуктовая корзина',      term: null },
+    ],
+  },
+  {
+    slug: '2-m-22-35', label: 'Карусель 2 — Мужчины 22–35',
+    cover: { variant: 'dynamic', title: 'Заправка, техника,<br>ресторан — <em>0%</em>' },
+    cards: [
+      { title: 'Заправки',               photo: 'fuel',       item: 'Полный бак',          term: 6 },
+      { title: 'Смартфоны и гаджеты',    photo: 'smartphone', item: 'Новый смартфон',      term: 12 },
+      { title: 'Кафе и рестораны',       photo: 'steak',      item: 'Ужин в ресторане',    term: 6 },
+      { title: 'Продукты<br>тоже по Тумар', photo: 'groceries',  item: 'Продуктовая корзина', term: null },
+    ],
+  },
+  {
+    slug: '3-zh-36-50', label: 'Карусель 3 — Женщины 36–50',
+    cover: { variant: 'warm', title: 'Рассрочка <em>0%</em><br>для семьи и дома' },
+    cards: [
+      { title: 'Одежда и обувь',  photo: 'clothes-mature', item: 'Платье',              term: 6 },
+      { title: 'Продукты',        photo: 'groceries',      item: 'Продуктовая корзина', term: null },
+      { title: 'Бытовая техника', photo: 'washer',         item: 'Стиральная машина',   term: 12 },
+    ],
+  },
+  {
+    slug: '4-m-36-50', label: 'Карусель 4 — Мужчины 36–50',
+    cover: { variant: 'strict', size: 80, title: 'Заправка<br>и техника —<br><em>0%</em> переплат' },
+    cards: [
+      { title: 'Заправки',               photo: 'fuel',      item: 'Полный бак',          term: 6 },
+      { title: 'Бытовая техника',        photo: 'washer',    item: 'Стиральная машина',   term: 12 },
+      { title: 'Продукты<br>тоже по Тумар', photo: 'groceries', item: 'Продуктовая корзина', term: null },
+    ],
+  },
+  {
+    slug: '5-51plus', label: 'Карусель 5 — Все 51+',
+    cover: { variant: 'calm', title: 'Рассрочка <em>0%</em> —<br>без переплат' },
+    cards: [
+      { title: 'Бытовая техника',          photo: 'fridge', item: 'Холодильник', term: 12 },
+      { title: 'Мебель и товары<br>для дома', photo: 'sofa',   item: 'Диван',       term: 12 },
+      { title: 'Заправки<br>тоже по Тумар',   photo: 'fuel',   item: 'Полный бак',  term: null },
+    ],
+  },
+];
+
+const COVER_FOOT = 'Рассрочка до 12 месяцев · Visa Gold<br>Бесплатный выпуск';
+const CTA = {
+  title: 'Покупай<br>в рассрочку <em>0%</em>',
+  sub: '3 500 партнёров по всему Кыргызстану',
+  button: 'Оформить карту',
+};
+const BANDS = ['blue', 'teal'];   // чередование фона карточек категорий
+
+// ============================================================
+// ШАБЛОНЫ
+// ============================================================
+const sym = (id, cls = 'sym') => `<svg class="${cls}"><use href="#${id}"/></svg>`;
+const logoTumar = () => `<span class="logo-tumar">${sym('tumar-sym')}<span>тумар</span></span>`;
+const logoBakai = () => `<span class="logo-bakai">${sym('bakai-sym', '')}<b>BAKAI</b><i>BANK</i></span>`;
+const arrow = (cls = 'arrow') => `<svg class="${cls}"><use href="#arrow"/></svg>`;
+const months = (n) => `${n} ${n % 10 === 1 && n % 100 !== 11 ? 'месяц' : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) ? 'месяца' : 'месяцев'}`;
+
+const tumarCard = () => `
+  <div class="tcard" data-avoid>
+    <div class="tcard__bank silver">${logoBakai()}</div>
+    <svg class="tcard__sym sym"><use href="#tumar-sym-silver"/></svg>
+    <div class="tcard__name silver">тумар</div>
+    <div class="tcard__chip"></div>
+    <div class="tcard__visa silver">VISA</div>
+  </div>`;
+
+function coverAd(c, name) {
+  const v = c.cover.variant;
+  return `
+  <section class="ad ad--navy cover v-${v}" data-name="${name}">
+    <div class="glow glow--a"></div><div class="glow glow--b"></div>
+    ${v === 'dynamic' ? '<div class="streaks"></div>' : ''}
+    <svg class="wm sym"><use href="#tumar-sym"/></svg>
+    ${v === 'strict' ? '<div class="rule"></div>' : ''}
+    <div class="cover__top">${logoBakai()}<span class="badge">${logoTumar()}</span></div>
+    <div class="cover__head">
+      <h1 class="cover__title" data-avoid data-fit="${c.cover.size || 88}" style="font-size:${c.cover.size || 88}px">${c.cover.title}</h1>
+      <div class="pill" data-avoid>Листай ${arrow('')}</div>
+    </div>
+    ${tumarCard()}
+    <p class="cover__foot" data-avoid>${COVER_FOOT}</p>
+  </section>`;
+}
+
+function categoryAd(card, i, name) {
+  const band = BANDS[i % BANDS.length];
+  const term = card.term ? `<em>0%</em> на ${months(card.term)}` : `<em>0%</em> переплат`;
+  return `
+  <section class="ad ad--${band} cat" data-name="${name}" data-photo="${card.photo}">
+    <svg class="wm sym"><use href="#tumar-sym"/></svg>
+    <div class="cat__photo">
+      <img class="ad__photo" src="photos/${card.photo}.jpg" alt=""
+           onerror="this.outerHTML='<div class=&quot;ph&quot;>ФОТО: ${PHOTOS[card.photo]}<br>photos/${card.photo}.jpg</div>'">
+    </div>
+    <div class="cat__shade"></div>
+    <div class="cat__top">${logoTumar()}</div>
+    ${arrow()}
+    <div class="cat__body">
+      <h2 class="cat__title" data-fit="80">${card.title}</h2>
+      <div class="plate">
+        <div class="plate__item">${card.item}</div>
+        <div class="plate__line"></div>
+        <div class="plate__term">${term}</div>
+      </div>
+    </div>
+  </section>`;
+}
+
+function ctaAd(name) {
+  return `
+  <section class="ad ad--navy cta" data-name="${name}">
+    <div class="glow glow--a"></div>
+    <svg class="wm sym"><use href="#tumar-sym"/></svg>
+    <div class="cover__top">${logoBakai()}${logoTumar()}</div>
+    <h2 class="cta__title" data-avoid data-fit="84">${CTA.title}</h2>
+    <p class="cta__sub" data-avoid>${CTA.sub}</p>
+    <div class="btn" data-avoid>${CTA.button} ${arrow('')}</div>
+    ${tumarCard()}
+  </section>`;
+}
+
+document.getElementById('decks').innerHTML = CAROUSELS.map((c) => {
+  const pad = (n) => String(n).padStart(2, '0');
+  const ads = [coverAd(c, `${c.slug}/01-cover`)];
+  c.cards.forEach((card, i) => ads.push(categoryAd(card, i, `${c.slug}/${pad(i + 2)}-${card.photo}`)));
+  ads.push(ctaAd(`${c.slug}/${pad(c.cards.length + 2)}-cta`));
+  return `<div class="deck"><div class="deck__label">${c.label} · ${ads.length} карточек</div>
+          <div class="deck__row">${ads.join('')}</div></div>`;
+}).join('');
+
+// ============================================================
+// ПОДГОНКА: заголовки уменьшаются, пока не перестанут
+// упираться в фото / налезать на карту. Результат — в data-fit-result.
+// ============================================================
+const LIMITS = { cat: { maxLines: 2, minTop: 440 }, min: 56 };
+// Пересечение двух выпуклых фигур (прямоугольник или повёрнутая карта)
+// по теореме о разделяющей оси.
+const GAP = 16;   // минимальный зазор между текстом и картой, px
+const corners = (s, g) => s.quad || [[s.left - g, s.top - g], [s.right + g, s.top - g],
+                                     [s.right + g, s.bottom + g], [s.left - g, s.bottom + g]];
+function rectsOverlap(a, b) {
+  const g = a.quad || b.quad ? GAP : 0;   // зазор нужен только до карты
+  const pa = corners(a, g), pb = corners(b, g);
+  for (const poly of [pa, pb]) {
+    for (let i = 0; i < poly.length; i++) {
+      const [x1, y1] = poly[i], [x2, y2] = poly[(i + 1) % poly.length];
+      const nx = y2 - y1, ny = x1 - x2;
+      const proj = (p) => p.map(([x, y]) => x * nx + y * ny);
+      const A = proj(pa), B = proj(pb);
+      if (Math.max(...A) <= Math.min(...B) || Math.max(...B) <= Math.min(...A)) return false;
+    }
+  }
+  return true;
+}
+window.fitAds = function () {
+  document.querySelectorAll('.ad').forEach((ad) => {
+    const issues = [];
+    ad.querySelectorAll('[data-fit]').forEach((el) => {
+      let size = Number(el.dataset.fit);
+      const bad = () => {
+        const lh = parseFloat(getComputedStyle(el).lineHeight);
+        const lines = Math.round(el.getBoundingClientRect().height / lh);
+        if (ad.classList.contains('cat')) {
+          const body = el.parentElement.getBoundingClientRect().top - ad.getBoundingClientRect().top;
+          return lines > LIMITS.cat.maxLines || body < LIMITS.cat.minTop;
+        }
+        return el.scrollWidth > el.clientWidth + 1;
+      };
+      while (bad() && size > LIMITS.min) { size -= 2; el.style.fontSize = size + 'px'; }
+      if (bad()) issues.push('OVERFLOW');
+    });
+    // Пересечения элементов, которые не должны наезжать друг на друга.
+    // Повёрнутая карта проверяется по своему реальному контуру (4 угла),
+    // текстовые заголовки — по строкам.
+    const box = (el) => {
+      const r = el.getBoundingClientRect();
+      if (el.classList.contains('tcard')) {
+        const m = new DOMMatrix(getComputedStyle(el).transform);
+        const cx = (r.left + r.right) / 2, cy = (r.top + r.bottom) / 2;
+        const w = el.offsetWidth / 2, h = el.offsetHeight / 2;
+        return [{ quad: [[-w, -h], [w, -h], [w, h], [-w, h]]
+          .map(([x, y]) => [cx + m.a * x + m.c * y, cy + m.b * x + m.d * y]) }];
+      }
+      if (!el.classList.contains('cover__title') && !el.classList.contains('cta__title')) return [r];
+      const range = document.createRange(); range.selectNodeContents(el);
+      return [...range.getClientRects()];   // по строкам, а не весь блок
+    };
+    const els = [...ad.querySelectorAll('[data-avoid]')];
+    for (let i = 0; i < els.length; i++) for (let j = i + 1; j < els.length; j++) {
+      if (box(els[i]).some((a) => box(els[j]).some((b) => rectsOverlap(a, b))))
+        issues.push(`OVERLAP ${els[i].className} × ${els[j].className}`);
+    }
+    // Ничего важного не должно вылезать за кадр.
+    const adR = ad.getBoundingClientRect();
+    ad.querySelectorAll('.cover__title, .cta__title, .cat__body, .cover__top, .pill, .btn, .cover__foot').forEach((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.left < adR.left || r.right > adR.right || r.top < adR.top || r.bottom > adR.bottom)
+        issues.push(`OUTSIDE ${el.className}`);
+    });
+    ad.dataset.fitResult = issues.join('; ') || 'ok';
+  });
+};
+document.fonts.ready.then(() => window.fitAds());
+</script>
+</body>
+</html>
