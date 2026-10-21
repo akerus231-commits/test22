@@ -50,8 +50,6 @@ h2{font-size:clamp(24px,3.5vw,32px);font-weight:600;letter-spacing:-.01em;margin
 h3{font-size:19px;font-weight:600;margin-bottom:8px}
 p+p{margin-top:14px}
 .lead{font-size:clamp(19px,2.4vw,23px);color:var(--muted);max-width:720px;margin-top:22px}
-.motto{margin-top:14px;font-size:17px;color:var(--text)}
-.motto b{color:var(--accent);font-weight:600}
 .hero{padding:88px 0 72px}
 .hero-grid{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center}
 .portrait{width:220px;height:260px;border-radius:14px;border:1px solid var(--line);background:var(--surface);object-fit:cover;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:56px;font-weight:600;letter-spacing:.04em}
@@ -59,10 +57,6 @@ p+p{margin-top:14px}
 .btn{display:inline-block;padding:12px 22px;border-radius:8px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;font-size:15px}
 .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
 .answer{font-size:19px;max-width:820px}
-.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:32px}
-.facts div{background:var(--bg);padding:18px 20px}
-.facts dt{color:var(--muted);font-size:13px;margin-bottom:4px}
-.facts dd{font-size:15px}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px}
 .card .tag{color:var(--accent);font-size:13px;margin-bottom:10px;display:block}
@@ -74,12 +68,6 @@ p+p{margin-top:14px}
 .exp li:first-child{border-top:0}
 .exp b{font-weight:600}
 .exp span{color:var(--muted)}
-.formula{list-style:none;counter-reset:f;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
-.formula li{counter-increment:f;border-top:2px solid var(--accent);padding-top:14px}
-.formula li::before{content:"0" counter(f);color:var(--accent);font-size:13px;display:block;margin-bottom:6px}
-.formula span{color:var(--muted);font-size:15px;display:block}
-.faq h3{margin-top:28px}
-.faq p{color:var(--muted);max-width:820px}
 .case{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:16px}
 .case h2{font-size:22px;margin-bottom:6px}
 .case .tag{color:var(--accent);font-size:13px;display:block;margin-bottom:16px}
@@ -87,23 +75,63 @@ p+p{margin-top:14px}
 .case ul{padding-left:18px}
 .case li+li{margin-top:6px}
 .result{border-left:2px solid var(--accent);padding-left:14px}
-.clients{display:flex;flex-wrap:wrap;gap:12px}.clients span{border:1px solid var(--line);border-radius:10px;padding:16px 26px;font-size:20px;font-weight:600;letter-spacing:.02em}.note{color:var(--muted);font-size:15px;margin-top:18px}
-.contacts{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
-footer{border-top:1px solid var(--line);padding:32px 0;color:var(--muted);font-size:14px}
+.note{color:var(--muted);font-size:15px;margin-top:18px}
+footer{border-top:1px solid var(--line);padding:64px 0 32px;background:var(--surface)}
+.footer-title{font-size:clamp(26px,4vw,40px);margin-bottom:10px}
+.footer-sub{color:var(--muted);margin-bottom:28px}
+.copy{color:var(--muted);font-size:14px;margin-top:32px}
+.socials{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.socials a{display:block;text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--bg)}
+.socials a:hover{border-color:var(--accent)}
+.socials b{display:block;font-weight:600}
+.socials span{color:var(--muted);font-size:14px;overflow-wrap:anywhere}
+.role{color:var(--accent);font-size:clamp(16px,2vw,19px);margin-top:14px}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.section-head h2{margin-bottom:0}
+.more{color:var(--accent);text-decoration:none;font-size:15px;white-space:nowrap}
+.projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.project{border:1px solid var(--line);border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:10px}
+.project .tag{color:var(--accent);font-size:13px}
+.project h3{margin:0}
+.project p{color:var(--muted);font-size:15px;flex:1}
+.project a{color:var(--accent);text-decoration:none;font-size:15px}
+.trust h2{font-size:15px;color:var(--muted);font-weight:400;letter-spacing:.08em;text-transform:uppercase}
+.trust ul{list-style:none;display:flex;flex-wrap:wrap;gap:10px 28px}
+.trust li{font-size:clamp(17px,2.2vw,21px);font-weight:600;letter-spacing:.01em}
+.card-links{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:16px;font-size:15px}
+.card-links a{color:var(--accent);text-decoration:none}
+.knowledge{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+.chips{list-style:none;display:flex;flex-wrap:wrap;gap:8px}
+.chips li{border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:14px}
+.steps{padding-left:22px;color:var(--muted);font-size:15px}
+.steps li+li{margin-top:8px}.steps b{color:var(--text);font-weight:600}
+.rows{list-style:none}
+.rows li{display:grid;grid-template-columns:220px 1fr;gap:20px;padding:18px 0;border-top:1px solid var(--line)}
+.rows li:first-child{border-top:0}
+.rows .when{color:var(--accent);font-size:14px;padding-top:3px}
+.rows h3{margin-bottom:4px}.rows p{color:var(--muted);font-size:15px}
+details summary{cursor:pointer;list-style:none}
+details summary::-webkit-details-marker{display:none}
+.more-box summary{color:var(--accent);font-size:15px;margin-top:12px}
+.more-box[open] summary{margin-bottom:4px}
+.qa{border-top:1px solid var(--line);padding:18px 0}
+.qa summary{font-weight:600;font-size:18px;display:flex;justify-content:space-between;gap:16px}
+.qa summary::after{content:"+";color:var(--accent)}
+.qa[open] summary::after{content:"−"}
+.qa p{color:var(--muted);margin-top:10px;max-width:820px}
 .crumbs{font-size:14px;color:var(--muted);margin-bottom:18px}
 .crumbs a{text-decoration:none}
 @media (max-width:760px){
  body{font-size:16px}
- .bar{gap:12px}.brand span{display:none}
- nav{gap:12px}nav a{font-size:14px}
+ .bar{gap:8px}.brand span{display:none}
+ nav{gap:10px}nav a{font-size:13px}nav .nav-home{display:none}
  .hero{padding:56px 0 48px}
  .hero-grid{grid-template-columns:1fr}
  .portrait{width:120px;height:140px;font-size:32px;order:-1}
  main section{padding:48px 0}
- .exp li{grid-template-columns:1fr;gap:2px}
- .facts{grid-template-columns:1fr 1fr}
+ .exp li,.rows li{grid-template-columns:1fr;gap:2px}
+ .knowledge{grid-template-columns:1fr;gap:40px}
 }
-@media (max-width:420px){.facts{grid-template-columns:1fr}}
 </style>
 <script type="application/ld+json">
 {
@@ -306,10 +334,15 @@ footer{border-top:1px solid var(--line);padding:32px 0;color:var(--muted);font-s
 </head>
 <body>
 <header><div class="wrap bar">
-<a class="brand" href="/"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 26V6h7.5a5 5 0 0 1 0 10H10"/><path d="M15.5 16 22 26"/><path d="M4 29 28 3" stroke="#5B82C9" stroke-width="1.2"/></svg><span>Руслан Хасанов</span></a>
-<nav aria-label="Основное меню"><a href="/about/">Обо мне</a><a href="/services/" aria-current="page">Услуги</a><a href="/cases/">Кейсы</a><a href="/teaching/">Преподавание</a></nav><a class="lang" href="/en/services/" hreflang="en" lang="en" title="English version">EN</a>
+<a class="brand" href="/"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 26V6h7.5a5 5 0 0 1 0 10H10"/><path d="M15.5 16 22 26"/><path d="M4 29 28 3" stroke="#5B82C9" stroke-width="1.2"/></svg><span>Revanite</span></a>
+<nav aria-label="Основное меню"><a href="/" class="nav-home">Главная</a><a href="/cases/">Кейсы</a><a href="/services/" aria-current="page">Услуги</a><a href="/teaching/">Преподавание</a><a href="/contact/">Контакты</a></nav><a class="lang" href="/en/services/" hreflang="en" lang="en" title="English version">EN</a>
 </div></header>
-<main class="wrap"><section class="page"><p class="crumbs"><a href="/">Главная</a> / Услуги</p><h1>Услуги</h1><p class="lead">Три формата работы — от диагностики до исполнения и обучения.</p></section><section id="tracking"><p class="eyebrow">Revanite Tracking</p><h2>Трекинг и стратегия</h2><p>Для стартапов на ранних стадиях, команд в акселераторах и собственников бизнеса, у которых рост упёрся в потолок.</p><div class="card" style="margin-top:20px"><h3>Что входит</h3><ul><li>Диагностика точек роста и главного ограничения</li><li>Проверка продуктовых и маркетинговых гипотез</li><li>Построение воронки продаж и go-to-market</li><li>Поиск и привлечение первых клиентов</li><li>Работа с фаундером: фокус, приоритеты, решения</li></ul><p style="margin-top:14px"><b>Формат:</b> Регулярные трекшн-встречи, трекшн-карта, разбор метрик между встречами.</p></div></section><section id="studio"><p class="eyebrow">Revanite Studio</p><h2>Маркетинг под ключ</h2><p>Для малого и среднего бизнеса в Казахстане и СНГ, которому нужен результат в заявках и продажах, а не в охватах.</p><div class="card" style="margin-top:20px"><h3>Что входит</h3><ul><li>Стратегия и медиаплан с расчётом окупаемости</li><li>Google Ads: поиск, UAC; Meta Ads; TikTok Ads</li><li>Настройка аналитики: GA4, Google Tag Manager, Яндекс Метрика, Meta Pixel и Conversions API</li><li>Мобильная атрибуция: AppsFlyer, связки с Google Ads и Meta</li><li>Сквозная аналитика: реклама → сайт → CRM (amoCRM, Bitrix24) → продажи</li><li>Отчётность план-факт и дашборды в Looker Studio</li></ul><p style="margin-top:14px"><b>Формат:</b> Проектно или ежемесячно, с еженедельной отчётностью.</p></div></section><section id="mentoring"><p class="eyebrow">Обучение и менторство</p><h2>Для маркетологов и команд</h2><p>Для маркетологов, которые хотят перейти от запуска рекламы к управлению ростом, и для команд, которым нужна общая методология.</p><div class="card" style="margin-top:20px"><h3>Что входит</h3><ul><li>Индивидуальный трек: digital-маркетинг, аналитика, AI-инструменты</li><li>Корпоративные воркшопы: go-to-market, growth hacking, лидогенерация и воронки</li><li>Выступления и гостевые лекции</li></ul><p style="margin-top:14px"><b>Формат:</b> Индивидуально или для группы, офлайн в Алматы или онлайн.</p></div></section><section id="contact"><h2>Контакты</h2><p>Напишите в WhatsApp или Telegram: коротко о бизнесе и задаче. Отвечу и предложу формат работы.</p><div class="contacts"><a class="btn" href="https://wa.me/77014584242" rel="noopener" target="_blank">WhatsApp</a><a class="btn ghost" href="https://t.me/messer66" rel="me noopener" target="_blank">Telegram @messer66</a><a class="btn ghost" href="tel:+77014584242">+7 701 458 42 42</a><a class="btn ghost" href="https://www.instagram.com/hasanov5/" rel="me noopener" target="_blank">Instagram @hasanov5</a><a class="btn ghost" href="https://www.linkedin.com/in/ruslan-khassanov-0bb812202" rel="me noopener" target="_blank">LinkedIn</a></div></section></main>
-<footer><div class="wrap">© 2026 Руслан Хасанов · Revanite — студия стратегического роста · Алматы, Казахстан</div></footer>
+<main class="wrap"><section class="page"><p class="crumbs"><a href="/">Главная</a> / Услуги</p><h1>Услуги</h1><p class="lead">Три формата работы — от диагностики до исполнения и обучения.</p></section><section id="tracking"><p class="eyebrow">Revanite Tracking</p><h2>Трекинг и стратегия</h2><p>Для стартапов на ранних стадиях, команд в акселераторах и собственников бизнеса, у которых рост упёрся в потолок.</p><div class="card" style="margin-top:20px"><h3>Что входит</h3><ul><li>Диагностика точек роста и главного ограничения</li><li>Проверка продуктовых и маркетинговых гипотез</li><li>Построение воронки продаж и go-to-market</li><li>Поиск и привлечение первых клиентов</li><li>Работа с фаундером: фокус, приоритеты, решения</li></ul><p style="margin-top:14px"><b>Формат:</b> Регулярные трекшн-встречи, трекшн-карта, разбор метрик между встречами.</p></div></section><section id="studio"><p class="eyebrow">Revanite Studio</p><h2>Маркетинг под ключ</h2><p>Для малого и среднего бизнеса в Казахстане и СНГ, которому нужен результат в заявках и продажах, а не в охватах.</p><div class="card" style="margin-top:20px"><h3>Что входит</h3><ul><li>Стратегия и медиаплан с расчётом окупаемости</li><li>Google Ads: поиск, UAC; Meta Ads; TikTok Ads</li><li>Настройка аналитики: GA4, Google Tag Manager, Яндекс Метрика, Meta Pixel и Conversions API</li><li>Мобильная атрибуция: AppsFlyer, связки с Google Ads и Meta</li><li>Сквозная аналитика: реклама → сайт → CRM (amoCRM, Bitrix24) → продажи</li><li>Отчётность план-факт и дашборды в Looker Studio</li></ul><p style="margin-top:14px"><b>Формат:</b> Проектно или ежемесячно, с еженедельной отчётностью.</p></div></section><section id="mentoring"><p class="eyebrow">Обучение и менторство</p><h2>Для маркетологов и команд</h2><p>Для маркетологов, которые хотят перейти от запуска рекламы к управлению ростом, и для команд, которым нужна общая методология.</p><div class="card" style="margin-top:20px"><h3>Что входит</h3><ul><li>Индивидуальный трек: digital-маркетинг, аналитика, AI-инструменты</li><li>Корпоративные воркшопы: go-to-market, growth hacking, лидогенерация и воронки</li><li>Выступления и гостевые лекции</li></ul><p style="margin-top:14px"><b>Формат:</b> Индивидуально или для группы, офлайн в Алматы или онлайн.</p></div></section></main>
+<footer id="contact"><div class="wrap">
+<h2 class="footer-title">Маркетинг как вложение, а не расход.</h2>
+<p class="footer-sub">Живу в Алматы, работаю с клиентами в Казахстане и СНГ.</p>
+<ul class="socials"><li><a href="https://t.me/messer66" rel="me noopener" target="_blank"><b>Telegram</b><span>@messer66</span></a></li><li><a href="https://wa.me/77014584242" rel="me noopener" target="_blank"><b>WhatsApp</b><span>Чат WhatsApp</span></a></li><li><a href="tel:+77014584242"><b>Телефон</b><span>+7 701 458 42 42</span></a></li><li><a href="https://www.instagram.com/hasanov5/" rel="me noopener" target="_blank"><b>Instagram</b><span>@hasanov5</span></a></li><li><a href="https://www.linkedin.com/in/ruslan-khassanov-0bb812202" rel="me noopener" target="_blank"><b>LinkedIn</b><span>ruslan-khassanov</span></a></li></ul>
+<p class="copy">© 2026 Руслан Хасанов · Revanite — студия стратегического роста · Алматы, Казахстан</p>
+</div></footer>
 </body>
 </html>

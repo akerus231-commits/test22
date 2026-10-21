@@ -20,7 +20,18 @@ PHONE_H = "+7 701 458 42 42"
 SAME_AS = [IG, LI, TG]
 CLIENTS = ["BI GROUP", "Yeko", "Jintropine"]
 
-PAGES = ["", "about", "services", "cases", "teaching"]
+TRUST = ["BI GROUP", "Alfa Bank", "Home Credit Bank", "Halyk Insurance", "Samsung Kazakhstan", "re:Kassa",
+         "Astana Hub", "AlmaU", "Yeko", "Jintropine"]
+FEATURED = [0, 1, 5]  # индексы в CASES для блока «Избранные кейсы»
+
+def socials(lang):
+    ru = lang == "ru"
+    return [("Telegram", "@messer66", TG), ("WhatsApp", "Чат WhatsApp" if ru else "WhatsApp chat", WA),
+            ("Телефон" if ru else "Phone", PHONE_H, "tel:" + PHONE), ("Instagram", "@hasanov5", IG),
+            ("LinkedIn", "ruslan-khassanov", LI)]
+
+PAGES = ["", "about", "services", "cases", "teaching", "contact"]
+NAV = ["", "cases", "services", "teaching", "contact"]
 
 def url(lang, slug):
     prefix = "" if lang == "ru" else "/en"
@@ -35,7 +46,7 @@ T = {
  "ru": {
   "name": "Руслан Хасанов",
   "role": "Growth-стратег · Трекер · Преподаватель digital-маркетинга",
-  "nav": {"about": "Обо мне", "services": "Услуги", "cases": "Кейсы", "teaching": "Преподавание"},
+  "nav": {"": "Главная", "about": "Обо мне", "services": "Услуги", "cases": "Кейсы", "teaching": "Преподавание", "contact": "Контакты"},
   "home": "Главная",
   "switch": ("EN", "English version"),
   "contact": "Связаться",
@@ -51,7 +62,7 @@ T = {
  "en": {
   "name": "Ruslan Khasanov",
   "role": "Growth strategist · Startup tracker · Digital marketing lecturer",
-  "nav": {"about": "About", "services": "Services", "cases": "Case studies", "teaching": "Teaching"},
+  "nav": {"": "Home", "about": "About", "services": "Services", "cases": "Case studies", "teaching": "Teaching", "contact": "Contact"},
   "home": "Home",
   "switch": ("RU", "Русская версия"),
   "contact": "Get in touch",
@@ -338,6 +349,8 @@ META = {
             "Кейсы Руслана Хасанова: аналитика воронки бизнес-форума с ROAS 234%, мобильная атрибуция финтех-приложения, B2B-стратегия производителя, трекинг стартапов."),
   "teaching": ("Преподавание и выступления — Руслан Хасанов",
                "Руслан Хасанов преподаёт digital-маркетинг в AlmaU, руководит направлением «Диджитал» в Qamalladin University, проводит воркшопы в Astana Hub."),
+  "contact": ("Контакты — Руслан Хасанов, Revanite",
+              "Как связаться с Русланом Хасановым: Telegram @messer66, WhatsApp и телефон +7 701 458 42 42, Instagram, LinkedIn. Алматы, Казахстан."),
  },
  "en": {
   "": ("Ruslan Khasanov — growth strategist, startup tracker, digital marketing | Almaty",
@@ -350,12 +363,14 @@ META = {
             "Ruslan Khasanov's case studies: business forum funnel analytics with 234% ROAS, fintech app attribution, B2B manufacturer strategy, startup tracking."),
   "teaching": ("Teaching and talks — Ruslan Khasanov",
                "Ruslan Khasanov lectures in digital marketing at AlmaU, leads the Digital programme at Qamalladin University and runs workshops at Astana Hub."),
+  "contact": ("Contact — Ruslan Khasanov, Revanite",
+              "How to reach Ruslan Khasanov: Telegram @messer66, WhatsApp and phone +7 701 458 42 42, Instagram, LinkedIn. Almaty, Kazakhstan."),
  },
 }
 
 H1 = {
- "ru": {"about": "Руслан Хасанов: биография", "services": "Услуги", "cases": "Кейсы", "teaching": "Преподавание и выступления"},
- "en": {"about": "Ruslan Khasanov: biography", "services": "Services", "cases": "Case studies", "teaching": "Teaching and talks"},
+ "ru": {"about": "Руслан Хасанов: биография", "services": "Услуги", "cases": "Кейсы", "teaching": "Преподавание и выступления", "contact": "Контакты"},
+ "en": {"about": "Ruslan Khasanov: biography", "services": "Services", "cases": "Case studies", "teaching": "Teaching and talks", "contact": "Contact"},
 }
 
 # ---------------------------------------------------------------- SCHEMA
@@ -413,7 +428,7 @@ def breadcrumbs(lang, slug, title):
 
 def schema(lang, slug):
     title, desc = META[lang][slug]
-    page_type = {"": "WebPage", "about": "ProfilePage", "services": "WebPage", "cases": "CollectionPage", "teaching": "WebPage"}[slug]
+    page_type = {"": "WebPage", "about": "ProfilePage", "services": "WebPage", "cases": "CollectionPage", "teaching": "WebPage", "contact": "ContactPage"}[slug]
     page = {"@type": page_type, "@id": url(lang, slug) + "#webpage", "url": url(lang, slug), "name": title,
             "description": desc, "inLanguage": lang, "isPartOf": {"@id": BASE + "/#website"},
             "about": {"@id": BASE + "/#person"}, "dateModified": TODAY}
@@ -463,8 +478,6 @@ h2{font-size:clamp(24px,3.5vw,32px);font-weight:600;letter-spacing:-.01em;margin
 h3{font-size:19px;font-weight:600;margin-bottom:8px}
 p+p{margin-top:14px}
 .lead{font-size:clamp(19px,2.4vw,23px);color:var(--muted);max-width:720px;margin-top:22px}
-.motto{margin-top:14px;font-size:17px;color:var(--text)}
-.motto b{color:var(--accent);font-weight:600}
 .hero{padding:88px 0 72px}
 .hero-grid{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center}
 .portrait{width:220px;height:260px;border-radius:14px;border:1px solid var(--line);background:var(--surface);object-fit:cover;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:56px;font-weight:600;letter-spacing:.04em}
@@ -472,10 +485,6 @@ p+p{margin-top:14px}
 .btn{display:inline-block;padding:12px 22px;border-radius:8px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;font-size:15px}
 .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
 .answer{font-size:19px;max-width:820px}
-.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:32px}
-.facts div{background:var(--bg);padding:18px 20px}
-.facts dt{color:var(--muted);font-size:13px;margin-bottom:4px}
-.facts dd{font-size:15px}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px}
 .card .tag{color:var(--accent);font-size:13px;margin-bottom:10px;display:block}
@@ -487,12 +496,6 @@ p+p{margin-top:14px}
 .exp li:first-child{border-top:0}
 .exp b{font-weight:600}
 .exp span{color:var(--muted)}
-.formula{list-style:none;counter-reset:f;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
-.formula li{counter-increment:f;border-top:2px solid var(--accent);padding-top:14px}
-.formula li::before{content:"0" counter(f);color:var(--accent);font-size:13px;display:block;margin-bottom:6px}
-.formula span{color:var(--muted);font-size:15px;display:block}
-.faq h3{margin-top:28px}
-.faq p{color:var(--muted);max-width:820px}
 .case{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:16px}
 .case h2{font-size:22px;margin-bottom:6px}
 .case .tag{color:var(--accent);font-size:13px;display:block;margin-bottom:16px}
@@ -500,23 +503,63 @@ p+p{margin-top:14px}
 .case ul{padding-left:18px}
 .case li+li{margin-top:6px}
 .result{border-left:2px solid var(--accent);padding-left:14px}
-.clients{display:flex;flex-wrap:wrap;gap:12px}.clients span{border:1px solid var(--line);border-radius:10px;padding:16px 26px;font-size:20px;font-weight:600;letter-spacing:.02em}.note{color:var(--muted);font-size:15px;margin-top:18px}
-.contacts{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
-footer{border-top:1px solid var(--line);padding:32px 0;color:var(--muted);font-size:14px}
+.note{color:var(--muted);font-size:15px;margin-top:18px}
+footer{border-top:1px solid var(--line);padding:64px 0 32px;background:var(--surface)}
+.footer-title{font-size:clamp(26px,4vw,40px);margin-bottom:10px}
+.footer-sub{color:var(--muted);margin-bottom:28px}
+.copy{color:var(--muted);font-size:14px;margin-top:32px}
+.socials{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.socials a{display:block;text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--bg)}
+.socials a:hover{border-color:var(--accent)}
+.socials b{display:block;font-weight:600}
+.socials span{color:var(--muted);font-size:14px;overflow-wrap:anywhere}
+.role{color:var(--accent);font-size:clamp(16px,2vw,19px);margin-top:14px}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.section-head h2{margin-bottom:0}
+.more{color:var(--accent);text-decoration:none;font-size:15px;white-space:nowrap}
+.projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.project{border:1px solid var(--line);border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:10px}
+.project .tag{color:var(--accent);font-size:13px}
+.project h3{margin:0}
+.project p{color:var(--muted);font-size:15px;flex:1}
+.project a{color:var(--accent);text-decoration:none;font-size:15px}
+.trust h2{font-size:15px;color:var(--muted);font-weight:400;letter-spacing:.08em;text-transform:uppercase}
+.trust ul{list-style:none;display:flex;flex-wrap:wrap;gap:10px 28px}
+.trust li{font-size:clamp(17px,2.2vw,21px);font-weight:600;letter-spacing:.01em}
+.card-links{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:16px;font-size:15px}
+.card-links a{color:var(--accent);text-decoration:none}
+.knowledge{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+.chips{list-style:none;display:flex;flex-wrap:wrap;gap:8px}
+.chips li{border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:14px}
+.steps{padding-left:22px;color:var(--muted);font-size:15px}
+.steps li+li{margin-top:8px}.steps b{color:var(--text);font-weight:600}
+.rows{list-style:none}
+.rows li{display:grid;grid-template-columns:220px 1fr;gap:20px;padding:18px 0;border-top:1px solid var(--line)}
+.rows li:first-child{border-top:0}
+.rows .when{color:var(--accent);font-size:14px;padding-top:3px}
+.rows h3{margin-bottom:4px}.rows p{color:var(--muted);font-size:15px}
+details summary{cursor:pointer;list-style:none}
+details summary::-webkit-details-marker{display:none}
+.more-box summary{color:var(--accent);font-size:15px;margin-top:12px}
+.more-box[open] summary{margin-bottom:4px}
+.qa{border-top:1px solid var(--line);padding:18px 0}
+.qa summary{font-weight:600;font-size:18px;display:flex;justify-content:space-between;gap:16px}
+.qa summary::after{content:"+";color:var(--accent)}
+.qa[open] summary::after{content:"−"}
+.qa p{color:var(--muted);margin-top:10px;max-width:820px}
 .crumbs{font-size:14px;color:var(--muted);margin-bottom:18px}
 .crumbs a{text-decoration:none}
 @media (max-width:760px){
  body{font-size:16px}
- .bar{gap:12px}.brand span{display:none}
- nav{gap:12px}nav a{font-size:14px}
+ .bar{gap:8px}.brand span{display:none}
+ nav{gap:10px}nav a{font-size:13px}nav .nav-home{display:none}
  .hero{padding:56px 0 48px}
  .hero-grid{grid-template-columns:1fr}
  .portrait{width:120px;height:140px;font-size:32px;order:-1}
  main section{padding:48px 0}
- .exp li{grid-template-columns:1fr;gap:2px}
- .facts{grid-template-columns:1fr 1fr}
+ .exp li,.rows li{grid-template-columns:1fr;gap:2px}
+ .knowledge{grid-template-columns:1fr;gap:40px}
 }
-@media (max-width:420px){.facts{grid-template-columns:1fr}}
 """
 
 def portrait(lang):
@@ -525,55 +568,73 @@ def portrait(lang):
         return f'<img class="portrait" src="/assets/ruslan-khasanov.jpg" alt="{alt}" width="220" height="260">'
     return f'<div class="portrait" role="img" aria-label="{alt}">{"РХ" if lang=="ru" else "RK"}</div>'
 
-def contact_block(lang):
-    h = "Контакты" if lang == "ru" else "Contact"
-    p = ("Напишите в WhatsApp или Telegram: коротко о бизнесе и задаче. Отвечу и предложу формат работы."
-         if lang == "ru" else
-         "Message me on WhatsApp or Telegram with a short note about your business and the challenge. I will reply with a suggested format.")
-    return (f'<section id="contact"><h2>{h}</h2><p>{p}</p><div class="contacts">'
-            f'<a class="btn" href="{WA}" rel="noopener" target="_blank">WhatsApp</a>'
-            f'<a class="btn ghost" href="{TG}" rel="me noopener" target="_blank">Telegram @messer66</a>'
-            f'<a class="btn ghost" href="tel:{PHONE}">{PHONE_H}</a>'
-            f'<a class="btn ghost" href="{IG}" rel="me noopener" target="_blank">Instagram @hasanov5</a>'
-            f'<a class="btn ghost" href="{LI}" rel="me noopener" target="_blank">LinkedIn</a></div></section>')
+def head(title, link=None, label=None):
+    more = f'<a class="more" href="{link}">{label} →</a>' if link else ""
+    return f'<div class="section-head"><h2>{title}</h2>{more}</div>'
+
+def social_list(lang):
+    out = []
+    for name, handle, href in socials(lang):
+        ext = "" if href.startswith("tel:") else ' rel="me noopener" target="_blank"'
+        out.append(f'<li><a href="{href}"{ext}><b>{name}</b><span>{handle}</span></a></li>')
+    return '<ul class="socials">' + "".join(out) + "</ul>"
 
 def body_home(lang):
     t = T[lang]
     ru = lang == "ru"
-    facts = [
-        ("Город" if ru else "Based in", "Алматы, Казахстан" if ru else "Almaty, Kazakhstan"),
-        ("Специализация" if ru else "Focus", "Стратегия роста, performance-маркетинг, сквозная аналитика" if ru else "Growth strategy, performance marketing, end-to-end analytics"),
-        ("Компания" if ru else "Company", "Revanite — студия стратегического роста" if ru else "Revanite — Strategic Growth Studio"),
-        ("Трекинг" if ru else "Tracking", "Astana Hub, Almaty Hub, Terricon Valley, NURIS, IT Park"),
-        ("Преподавание" if ru else "Teaching", "AlmaU, Qamalladin University, ICB"),
-        ("Опыт" if ru else "Background", "Alfa Bank, Home Credit Bank, Halyk Insurance, BI GROUP, Samsung Kazakhstan, re:Kassa"),
-    ]
-    facts_html = "".join(f"<div><dt>{a}</dt><dd>{b}</dd></div>" for a, b in facts)
-    cards = "".join(
-        f'<article class="card"><span class="tag">{name}</span><h3>{sub}</h3><p>{who}</p>'
-        f'<p style="margin-top:14px"><a href="{path(lang,"services")}#{key}">{"Подробнее" if ru else "Details"} →</a></p></article>'
-        for key, name, sub, who, items, fmt in SERVICES[lang])
-    exp = "".join(f"<li><b>{a}</b><span>{b}</span></li>" for a, b in EXPERIENCE[lang])
-    formula = "".join(f"<li><b>{a}</b><span>{b}</span></li>" for a, b in FORMULA[lang])
-    faq = "".join(f"<h3>{q}</h3><p>{a}</p>" for q, a in FAQ[lang])
     lead = ("Нахожу точки роста в бизнесе. Дальше — делаю сам, учу команду или помогаю принять решение."
             if ru else "I find where a business can grow. Then I either do the work, teach the team, or help make the call.")
-    motto = ('<b>Revanite:</b> маркетинг как вложение, а не расход.' if ru else '<b>Revanite:</b> marketing as an investment, not an expense.')
+    cta = "Обсудить задачу" if ru else "Discuss your project"
+    projects = "".join(
+        f'<article class="project"><span class="tag">{CASES[lang][i][1]}</span><h3>{CASES[lang][i][0]}</h3>'
+        f'<p>{CASES[lang][i][4]}</p><a href="{path(lang,"cases")}#case-{i+1}">{"Открыть кейс" if ru else "Open case"} →</a></article>'
+        for i in FEATURED)
+    trust = "".join(f"<li>{c}</li>" for c in TRUST)
+    services = "".join(
+        f'<article class="card"><span class="tag">{name}</span><h3>{sub}</h3><p>{who}</p>'
+        f'<p class="card-links"><a href="{WA}" rel="noopener" target="_blank">{cta}</a>'
+        f'<a href="{path(lang,"services")}#{key}">{"Подробнее" if ru else "Details"} →</a></p></article>'
+        for key, name, sub, who, items, fmt in SERVICES[lang])
+    chips = "".join(f"<li>{k}</li>" for k in KNOWS[lang])
+    formula = "".join(f"<li><b>{a}</b> — {b}</li>" for a, b in FORMULA[lang])
+    teach = "".join(
+        f'<li><span class="when">{role}</span><div><h3>{place}</h3>'
+        + (f'<p>{"; ".join(items)}.</p>' if items else "") + "</div></li>"
+        for place, role, items in TEACH[lang])
+    rows = [f"<li><b>{a}</b><span>{b}</span></li>" for a, b in EXPERIENCE[lang]]
+    exp = ('<ul class="exp">' + "".join(rows[:4]) + "</ul>"
+           f'<details class="more-box"><summary>{"Показать ещё опыт" if ru else "Show more experience"}</summary>'
+           '<ul class="exp">' + "".join(rows[4:]) + "</ul></details>")
+    faq = "".join(f'<details class="qa"><summary>{q}</summary><p>{a}</p></details>' for q, a in FAQ[lang])
     return f"""
 <section class="hero"><div class="hero-grid"><div>
-<p class="eyebrow">{t["role"]}</p>
 <h1>{t["name"]}</h1>
+<p class="role">{t["role"]}</p>
 <p class="lead">{lead}</p>
-<p class="motto">{motto}</p>
-<div class="cta"><a class="btn" href="#contact">{t["contact"]}</a><a class="btn ghost" href="{path(lang,"cases")}">{T[lang]["nav"]["cases"]}</a></div>
+<div class="cta"><a class="btn" href="{WA}" rel="noopener" target="_blank">{cta}</a><a class="btn ghost" href="{TG}" rel="me noopener" target="_blank">Telegram</a></div>
 </div>{portrait(lang)}</div></section>
-<section><h2>{"Коротко обо мне" if ru else "In short"}</h2><p class="answer">{t["summary"]}</p><dl class="facts">{facts_html}</dl></section>
-<section><h2>{"Три направления работы" if ru else "Three ways I work"}</h2><div class="cards">{cards}</div></section>
-<section><h2>{"Клиенты" if ru else "Clients"}</h2><div class="clients">{"".join(f"<span>{c}</span>" for c in CLIENTS)}</div><p class="note">{"Плюс проекты в банках, финтехе, образовании, B2B-производстве и ивентах — в разделе «Кейсы»." if ru else "Plus projects in banking, fintech, education, B2B manufacturing and events — see Case studies."}</p></section>
-<section><h2>{"Опыт" if ru else "Experience"}</h2><ul class="exp">{exp}</ul></section>
-<section><h2>{"Метод: Revanite Growth Formula" if ru else "Method: Revanite Growth Formula"}</h2><ol class="formula">{formula}</ol></section>
-<section class="faq" id="faq"><h2>{"Частые вопросы" if ru else "FAQ"}</h2>{faq}</section>
-{contact_block(lang)}"""
+<section>{head("Избранные кейсы" if ru else "Selected case studies", path(lang,"cases"), "Все кейсы" if ru else "All case studies")}<div class="projects">{projects}</div></section>
+<section class="trust"><h2>{"Мне доверяют" if ru else "Trusted by"}</h2><ul>{trust}</ul></section>
+<section>{head("Чем могу помочь" if ru else "How I can help")}<div class="cards">{services}</div></section>
+<section><h2>{"Обо мне" if ru else "About me"}</h2><p class="answer">{t["summary"]}</p>
+<p class="card-links"><a href="{path(lang,"about")}">{"Подробная биография" if ru else "Full biography"} →</a><a href="{IG}" rel="me noopener" target="_blank">Instagram</a><a href="{LI}" rel="me noopener" target="_blank">LinkedIn</a></p></section>
+<section><div class="knowledge">
+<div><h2>{"Навыки" if ru else "Skills"}</h2><ul class="chips">{chips}</ul></div>
+<div><h2>{"Метод: Revanite Growth Formula" if ru else "Method: Revanite Growth Formula"}</h2><ol class="steps">{formula}</ol></div>
+</div></section>
+<section>{head("Преподавание и выступления" if ru else "Teaching and talks", path(lang,"teaching"), "Подробнее" if ru else "Details")}<ul class="rows">{teach}</ul></section>
+<section>{head("Опыт работы" if ru else "Work experience", path(lang,"about"), "Биография" if ru else "Biography")}{exp}</section>
+<section id="faq">{head("Частые вопросы" if ru else "FAQ")}{faq}</section>"""
+
+def body_contact(lang):
+    ru = lang == "ru"
+    lead = ("Напишите в Telegram или WhatsApp: коротко о бизнесе и задаче. Отвечу и предложу формат работы."
+            if ru else "Message me on Telegram or WhatsApp with a short note about your business and the challenge. I will reply with a suggested format.")
+    note = ("Алматы, Казахстан. Работаю с клиентами в Казахстане, СНГ и онлайн."
+            if ru else "Almaty, Kazakhstan. Working with clients across Kazakhstan, the CIS and online.")
+    return f"""
+<section class="page">{crumbs(lang,"contact")}<h1>{H1[lang]["contact"]}</h1><p class="lead">{lead}</p></section>
+<section>{social_list(lang)}<p class="note">{note}</p></section>"""
 
 def crumbs(lang, slug):
     return f'<p class="crumbs"><a href="{path(lang,"")}">{T[lang]["home"]}</a> / {H1[lang][slug]}</p>'
@@ -600,8 +661,7 @@ def body_about(lang):
 <section>{bio}</section>
 <section><h2>{"Опыт" if ru else "Experience"}</h2><ul class="exp">{exp}</ul></section>
 <section><h2>{"Компетенции" if ru else "Expertise"}</h2><p>{kn}</p></section>
-<section><h2>{names}</h2><p>{names_p}</p></section>
-{contact_block(lang)}"""
+<section><h2>{names}</h2><p>{names_p}</p></section>"""
 
 def body_services(lang):
     ru = lang == "ru"
@@ -612,7 +672,6 @@ def body_services(lang):
         out.append(f'<section id="{key}"><p class="eyebrow">{name}</p><h2>{sub}</h2><p>{who}</p>'
                    f'<div class="card" style="margin-top:20px"><h3>{"Что входит" if ru else "What is included"}</h3><ul>{li}</ul>'
                    f'<p style="margin-top:14px"><b>{"Формат" if ru else "Format"}:</b> {fmt}</p></div></section>')
-    out.append(contact_block(lang))
     return "".join(out)
 
 def body_cases(lang):
@@ -620,13 +679,13 @@ def body_cases(lang):
     intro = ("Среди клиентов — BI GROUP, Yeko, Jintropine. В кейсах ниже названия не раскрываются без согласия клиента: описаны задача, решение и результат."
              if ru else "Clients include BI GROUP, Yeko and Jintropine. The cases below do not name clients without consent; each covers the task, the solution and the outcome.")
     out = [f'<section class="page">{crumbs(lang,"cases")}<h1>{H1[lang]["cases"]}</h1><p class="lead">{intro}</p></section><section>']
-    for title, tag, task, done, result in CASES[lang]:
+    for n, (title, tag, task, done, result) in enumerate(CASES[lang], 1):
         li = "".join(f"<li>{d}</li>" for d in done)
-        out.append(f'<article class="case"><h2>{title}</h2><span class="tag">{tag}</span>'
+        out.append(f'<article class="case" id="case-{n}"><h2>{title}</h2><span class="tag">{tag}</span>'
                    f'<h3>{"Задача" if ru else "Task"}</h3><p>{task}</p>'
                    f'<h3>{"Что сделано" if ru else "What was done"}</h3><ul>{li}</ul>'
                    f'<h3>{"Результат" if ru else "Outcome"}</h3><p class="result">{result}</p></article>')
-    out.append("</section>" + contact_block(lang))
+    out.append("</section>")
     return "".join(out)
 
 def body_teaching(lang):
@@ -643,10 +702,9 @@ def body_teaching(lang):
 <section class="page">{crumbs(lang,"teaching")}<h1>{H1[lang]["teaching"]}</h1><p class="lead">{lead}</p></section>
 <section><div class="cards">{cards}</div></section>
 <section><h2>{ctitle}</h2><p>{"Авторская программа для AlmaU: от основ LLM до сквозной аналитики и создания сайта с AI. Практические задания построены так, чтобы студент сначала делал работу руками, а потом проверял её с помощью AI." if ru else "An original programme for AlmaU, from LLM basics to end-to-end analytics and building a website with AI. Assignments require students to do the work by hand first and then check it with AI."}</p>
-<div class="card" style="margin-top:20px"><ol style="padding-left:20px">{cli}</ol></div></section>
-{contact_block(lang)}"""
+<div class="card" style="margin-top:20px"><ol style="padding-left:20px">{cli}</ol></div></section>"""
 
-BODIES = {"": body_home, "about": body_about, "services": body_services, "cases": body_cases, "teaching": body_teaching}
+BODIES = {"": body_home, "about": body_about, "services": body_services, "cases": body_cases, "teaching": body_teaching, "contact": body_contact}
 
 def render(lang, slug):
     t = T[lang]
@@ -654,8 +712,8 @@ def render(lang, slug):
     other = "en" if lang == "ru" else "ru"
     cur = ' aria-current="page"'
     nav = "".join(
-        f'<a href="{path(lang,s)}"{cur if s == slug else ""}>{t["nav"][s]}</a>'
-        for s in ["about", "services", "cases", "teaching"])
+        f'<a href="{path(lang,s)}"{cur if s == slug else ""}{"" if s else ' class="nav-home"'}>{t["nav"][s]}</a>'
+        for s in NAV)
     og_img = f'<meta property="og:image" content="{PHOTO_URL}">' if PHOTO else ""
     return f"""<!doctype html>
 <html lang="{lang}">
@@ -691,11 +749,16 @@ def render(lang, slug):
 </head>
 <body>
 <header><div class="wrap bar">
-<a class="brand" href="{path(lang,"")}">{LOGO}<span>{t["name"]}</span></a>
+<a class="brand" href="{path(lang,"")}">{LOGO}<span>Revanite</span></a>
 <nav aria-label="{"Основное меню" if lang=="ru" else "Main menu"}">{nav}</nav><a class="lang" href="{path(other,slug)}" hreflang="{other}" lang="{other}" title="{t["switch"][1]}">{t["switch"][0]}</a>
 </div></header>
 <main class="wrap">{BODIES[slug](lang)}</main>
-<footer><div class="wrap">© {datetime.date.today().year} {t["footer"]}</div></footer>
+<footer id="contact"><div class="wrap">
+<h2 class="footer-title">{"Маркетинг как вложение, а не расход." if lang=="ru" else "Marketing as an investment, not an expense."}</h2>
+<p class="footer-sub">{"Живу в Алматы, работаю с клиентами в Казахстане и СНГ." if lang=="ru" else "Based in Almaty, working with clients across Kazakhstan and the CIS."}</p>
+{social_list(lang)}
+<p class="copy">© {datetime.date.today().year} {t["footer"]}</p>
+</div></footer>
 </body>
 </html>
 """
